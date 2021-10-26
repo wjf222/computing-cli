@@ -60,11 +60,104 @@ export default [
     }
   },
   {
+    path: '/operator',
+    name: 'operator',
+    meta: {
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'operator_table_page',
+        name: 'operator_table_page',
+        meta: {
+          icon: 'ios-hammer',
+          title: '算子列表'
+        },
+        component: () => import('@/view/operator/operator-table-page.vue')
+      }
+    ]
+  },
+  {
+    path: '/pipeline',
+    name: 'pipeline',
+    component: Main,
+    meta: {
+      hideInBread: true
+    },
+    children: [
+      {
+        path: 'pipeline_page',
+        name: 'pipeline_page',
+        meta: {
+          icon: 'ios-hammer',
+          title: '流水线'
+        },
+        component: () => import('@/view/pipeline/pipeline-page.vue')
+      }
+    ]
+  },
+
+  {
+    path: '/ETL',
+    name: 'ETL工具',
+    meta: {
+      icon: 'md-menu',
+      title: 'ETL工具'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/dataSourceManage',
+        name: '数据源管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '数据源管理'
+        },
+        component: () => import('@/view/ETL-page/datasource.vue')
+        // component: resolve => require(['@/view/ETL-page/datasource.vue'],resolve)
+      },
+      {
+        path: '/themeManage',
+        name: '主题管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '主题管理'
+        },
+        component: () => import('@/view/ETL-page/theme.vue')
+        // 懒加载
+        // component: resolve => require(['@/view/ETL-page/theme.vue'],resolve)
+      },
+      {
+        path: '/strategyManage',
+        name: '策略管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '策略管理'
+        },
+        component: () => import('@/view/ETL-page/strategy.vue')
+        // component: resolve => require(['@/view/ETL-page/strategy.vue'],resolve)
+      },
+      {
+        path: '/etlStart',
+        name: '策略启动',
+        meta: {
+          icon: 'md-funnel',
+          title: '策略启动'
+        },
+        component: () => import('@/view/ETL-page/etl_start.vue')
+        // component: resolve => require(['@/view/ETL-page/etl_start.vue'],resolve)
+      }
+    ]
+  },
+
+  {
     path: '/join',
     name: 'join',
     component: Main,
     meta: {
-      hideInBread: true
+      hideInBread: true,
+      hideInMenu: true
     },
     children: [
       {
@@ -72,7 +165,7 @@ export default [
         name: 'join_page',
         meta: {
           icon: '_qq',
-          title: 'QQ群'
+          title: 'baidu'
         },
         component: () => import('@/view/join-page.vue')
       }
@@ -221,6 +314,8 @@ export default [
     path: '/update',
     name: 'update',
     meta: {
+      hideInBread: true,
+      hideInMenu: true,
       icon: 'md-cloud-upload',
       title: '数据上传'
     },
@@ -250,6 +345,8 @@ export default [
     path: '/excel',
     name: 'excel',
     meta: {
+      hideInBread: true,
+      hideInMenu: true,
       icon: 'ios-stats',
       title: 'EXCEL导入导出'
     },
@@ -279,7 +376,8 @@ export default [
     path: '/tools_methods',
     name: 'tools_methods',
     meta: {
-      hideInBread: true
+      hideInBread: true,
+      hideInMenu: true
     },
     component: Main,
     children: [
@@ -299,7 +397,8 @@ export default [
     path: '/i18n',
     name: 'i18n',
     meta: {
-      hideInBread: true
+      hideInBread: true,
+      hideInMenu: true
     },
     component: Main,
     children: [
@@ -318,7 +417,8 @@ export default [
     path: '/error_store',
     name: 'error_store',
     meta: {
-      hideInBread: true
+      hideInBread: true,
+      hideInMenu: true
     },
     component: Main,
     children: [
@@ -357,7 +457,8 @@ export default [
     path: '/directive',
     name: 'directive',
     meta: {
-      hideInBread: true
+      hideInBread: true,
+      hideInMenu: true
     },
     component: Main,
     children: [
@@ -376,6 +477,8 @@ export default [
     path: '/multilevel',
     name: 'multilevel',
     meta: {
+      hideInBread: true,
+      hideInMenu: true,
       icon: 'md-menu',
       title: '多级菜单'
     },
