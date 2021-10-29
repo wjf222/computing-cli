@@ -20,6 +20,7 @@ export default {
       columns: [
         { title: 'Name', key: 'name', sortable: true },
         { title: 'Email', key: 'email', editable: true },
+        { title: '节点', key: 'email', editable: true },
         { title: 'Create-Time', key: 'createTime' },
         {
           title: 'Handle',
@@ -27,7 +28,7 @@ export default {
           options: ['delete'],
           button: [
             (h, params, vm) => {
-              return h('Poptip', {
+              return h('Popup', {
                 props: {
                   confirm: true,
                   title: '你确定要删除吗?'

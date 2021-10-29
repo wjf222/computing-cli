@@ -1,8 +1,11 @@
 <template>
   <div>
     <Card>
+      <Button style="margin: 10px 10px;" type="primary" @click="searchTheme">搜索</Button>
+      <Button style="margin: 10px 10px;" type="success" @click="addTheme">添加</Button>
+      <Button style="margin: 10px 10px;" type="warning" @click="editTheme">修改</Button>
+      <Button style="margin: 10px 10px;" type="error" @click="deleteTheme">删除</Button>
       <tables ref="tables" editable searchable search-place="top" v-model="tableData" :columns="columns" @on-delete="handleDelete"/>
-      <Button style="margin: 10px 0;" type="primary" @click="exportExcel">导出为Csv文件</Button>
     </Card>
   </div>
 </template>
@@ -18,8 +21,14 @@ export default {
   data () {
     return {
       columns: [
-        { title: 'Name', key: 'name', sortable: true },
-        { title: 'Email', key: 'email', editable: true },
+        // 必选
+        { title: 'OperatorName', key: 'name', sortable: true },
+        { title: 'OperatorNamespace', key: 'email', editable: true },
+        { title: 'OperatorTag', key: 'email', editable: true },
+        // 可选
+        { title: 'OperatorMainClass', key: 'email', editable: true },
+        { title: 'OperatorRuntimeType', key: 'email', editable: true },
+        { title: 'OperatorDescription', key: 'email', editable: true },
         { title: 'Create-Time', key: 'createTime' },
         {
           title: 'Handle',
@@ -39,7 +48,7 @@ export default {
                   }
                 }
               }, [
-                h('Button', '自定义删除')
+                h('Button', '修改')
               ])
             }
           ]
@@ -51,11 +60,6 @@ export default {
   methods: {
     handleDelete (params) {
       console.log(params)
-    },
-    exportExcel () {
-      this.$refs.tables.exportCsv({
-        filename: `table-${(new Date()).valueOf()}.csv`
-      })
     }
   },
   mounted () {

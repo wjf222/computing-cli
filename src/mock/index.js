@@ -25,4 +25,7 @@ Mock.mock(/\/message\/count/, messageCount)
 Mock.mock(/\/get_org_data/, getOrgData)
 Mock.mock(/\/get_tree_select_data/, getTreeSelectData)
 
+// computing-cli 自己配置的mock数据
+Mock.mock(/\/get_table_data/, getTableData)
+
 export default Mock

@@ -1,22 +1,22 @@
 import axios from '@/libs/api.request'
 
 export const getOperators = (tag, namespace, name) => {
-  /*
-  返回Operators全量数据
+  /**
+   *   返回Operators全量数据
 
-  功能
-    1. 返回符合要求的 operator 列表，namespace 为空返回空列表；
-    2. namespace 不为空且 name 为空返回 namespace 对应的所有记录；
-    3. namespace 和 name 不为空且 tag 为空返回 namespace 和 name 对应的所有记录；
-    4. 都不为空返回精确查找的记录；
+   功能
+   1. 返回符合要求的 operator 列表，namespace 为空返回空列表；
+   2. namespace 不为空且 name 为空返回 namespace 对应的所有记录；
+   3. namespace 和 name 不为空且 tag 为空返回 namespace 和 name 对应的所有记录；
+   4. 都不为空返回精确查找的记录；
 
-  参数：
-    • tag, string
-    • namespace, string
-    • name, string
+   参数：
+   • tag, string
+   • namespace, string
+   • name, string
 
-  参数格式：
-    URL末尾添加
+   参数格式：
+   URL末尾添加
    */
   return axios.request({
     url: '/operators',
@@ -25,17 +25,17 @@ export const getOperators = (tag, namespace, name) => {
 }
 
 export const getOperatorById = (id) => {
-  /*
-  根据id检索指定operator
+  /**
+   根据id检索指定operator
 
-  功能
-    1. 返回指定Id的operator
+   功能
+   1. 返回指定Id的operator
 
-  参数：
-    • id, string
+   参数：
+   • id, string
 
-  参数格式：
-    跟随请求路径
+   参数格式：
+   跟随请求路径
    */
   return axios.request({
     url: '/operators',
@@ -44,7 +44,7 @@ export const getOperatorById = (id) => {
 }
 
 export const addOperator = () => {
-  /*
+  /**
   创建 operator
 
   功能
@@ -72,7 +72,7 @@ export const addOperator = () => {
 }
 
 export const uploadOperatorById = (id, upload_file) => {
-  /*
+  /**
   上传 operator
 
   功能
@@ -92,7 +92,7 @@ export const uploadOperatorById = (id, upload_file) => {
 }
 
 export const delOperatorById = (id) => {
-  /*
+  /**
   删除指定的 operator
 
   功能
