@@ -1,11 +1,15 @@
 <template>
   <div>
     <Card>
-      <Button style="margin: 10px 10px;" type="primary" @click="searchTheme">搜索</Button>
-      <Button style="margin: 10px 10px;" type="success" @click="addTheme">添加</Button>
-      <Button style="margin: 10px 10px;" type="warning" @click="editTheme">修改</Button>
-      <Button style="margin: 10px 10px;" type="error" @click="deleteTheme">删除</Button>
-      <tables ref="tables" editable searchable search-place="top" v-model="tableData" :columns="columns" @on-delete="handleDelete"/>
+      <Input placeholder="搜索算子" style="width: auto; margin: 10px 10px;" v-model="inputTheme" :search=true
+             @on-search="getOperatorById">
+        <Icon type="ios-search" slot="suffix"/>
+      </Input>
+      <Button style="margin: 10px 10px;" type="primary" @click="getOperatorById">搜索</Button>
+      <Button style="margin: 10px 10px;" type="success" @click="addOperator">添加</Button>
+      <Button style="margin: 10px 10px;" type="error" @click="delOperatorById">删除</Button>
+      <tables stripe :loading="loading" ref="tables" v-model="tableData" :columns="columns"
+              @on-selection-change="getOperatorById"/>
     </Card>
   </div>
 </template>
@@ -13,6 +17,8 @@
 <script>
 import Tables from '_c/tables'
 import { getTableData } from '@/api/data'
+import axios from '@/libs/api.request'
+
 export default {
   name: 'tables_page',
   components: {
@@ -31,27 +37,30 @@ export default {
         { title: 'OperatorDescription', key: 'email', editable: true },
         { title: 'Create-Time', key: 'createTime' },
         {
-          title: 'Handle',
-          key: 'handle',
-          options: ['delete'],
-          button: [
-            (h, params, vm) => {
-              return h('Poptip', {
+          title: '修改',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
                 props: {
-                  confirm: true,
-                  title: '你确定要删除吗?'
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  // 可以使用比例单位改进
+                  marginRight: '0px'
                 },
                 on: {
-                  'on-ok': () => {
-                    vm.$emit('on-delete', params)
-                    vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex))
+                  click: () => {
+                    this.operatorDetail(params)
                   }
                 }
-              }, [
-                h('Button', '修改')
-              ])
-            }
-          ]
+              }, '修改')
+
+            ])
+          }
         }
       ],
       tableData: []
@@ -60,6 +69,60 @@ export default {
   methods: {
     handleDelete (params) {
       console.log(params)
+    },
+
+    getOperators (tag, namespace, name) {
+      /**
+       * 返回Operators全量数据
+       */
+      return axios.request({
+        url: '/operators',
+        method: 'get'
+      })
+    },
+
+    getOperatorById (id) {
+      /**
+       * 根据id检索指定operator
+       */
+      return axios.request({
+        url: '/operators',
+        method: 'get'
+      })
+    },
+
+    addOperator () {
+      /**
+       * 创建 operator
+       */
+      return axios.request({
+        url: '/operators/:id',
+        method: 'post'
+      })
+    },
+
+    uploadOperatorById (id, upload_file) {
+      /**
+       * 上传 operator
+       */
+      return axios.request({
+        url: '/operators/:id',
+        method: 'put'
+      })
+    },
+
+    delOperatorById (id) {
+      /**
+       * 删除指定的 operator
+       */
+      return axios.request({
+        url: '/operators/:id',
+        method: 'delete'
+      })
+    },
+
+    operatorDetail () {
+
     }
   },
   mounted () {
