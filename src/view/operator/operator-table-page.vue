@@ -2,14 +2,15 @@
   <div>
     <Card>
       <Input placeholder="搜索算子" style="width: auto; margin: 10px 10px;" v-model="inputOperator" :search=true
-             @on-search="getOperatorById">
+             @on-search="searchOperator">
         <Icon type="ios-search" slot="suffix"/>
       </Input>
-      <Button style="margin: 10px 10px;" type="primary" @click="getOperatorById">搜索</Button>
+      <Button style="margin: 10px 10px;" type="primary" @click="searchOperator">搜索</Button>
       <Button style="margin: 10px 10px;" type="success" @click="addOperator">添加</Button>
       <Button style="margin: 10px 10px;" type="error" @click="delOperatorById">删除</Button>
-      <tables stripe :loading="loading" ref="tables" @on-edit="editOperator" v-model="tableData" :columns="columns"
+      <tables stripe :loading="loading" ref="tables" @on-edit="editOperator" v-model="nowData" :columns="columns"
               @on-selection-change="getOperatorById"/>
+      <Page :total="dataCount" ref="page" :current.sync="pageCurrent" :page-size="pageSize" @on-change="changepage" show-elevator />
     </Card>
     <Modal width=800 v-model="add" title="修改算子" @on-ok="saveOperator" @on-cancel="cancel">
       <Row :gutter="16">
@@ -139,7 +140,11 @@ export default {
         }
       ],
       tableData: [],
+      nowData: [],
       add: false,
+      pageCurrent: 2,
+      dataCount: 10,
+      pageSize: 10,
       editOradd: false,
       inputOperator: '',
       modalValue: {
@@ -229,6 +234,25 @@ export default {
       })
     },
 
+    searchOperator () {
+      console.log('searchOperator')
+      var that = this
+      var it = this.inputOperator
+      axios.request({
+        url: '/operators',
+        method: 'get',
+        params: {
+          namespace: it
+        }
+      }).then(function (response) {
+        var resdata = response.data
+        that.tableData = resdata
+        that.loading = false
+        that.dataCount = resdata.length
+        // // that.nowData=response.data.datasources.slice(0,10)
+        that.freshpage(that.pageCurrent)
+      })
+    },
     getOperatorById (id) {
       /**
        * 根据id检索指定operator
@@ -267,11 +291,35 @@ export default {
         url: '/operators/:id',
         method: 'delete'
       })
+    },
+    // 当有数据更新刷新页面
+    freshpage () {
+      // 考虑把pageCurrent变为0整页删除bug
+      this.pageCurrent = 1
+      this.changepage(this.pageCurrent)
+      // this.$refs.page.current=1;
+    },
+    // 点击，切换页面
+    changepage (index) {
+      console.log(this.tableData)
+      // console.log(this.pageCurrent)
+      // 需要显示开始数据的index,(因为数据是从0开始的，页码是从1开始的，需要-1)
+      const _start = (index - 1) * this.pageSize
+      // 需要显示结束数据的index
+      const _end = index * this.pageSize
+      // 截取需要显示的数据
+      this.nowData = this.tableData.slice(_start, _end)
+      // 储存当前页
+      console.log(this.nowData)
+      this.pageCurrent = index
     }
   },
   mounted () {
     getTableData().then(res => {
-      this.tableData = res.data
+      var that = this
+      that.tableData = res.data
+      that.dataCount = resdata.length
+      that.freshpage()
     })
   }
 }
