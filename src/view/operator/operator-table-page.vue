@@ -1,16 +1,91 @@
 <template>
   <div>
     <Card>
-      <Input placeholder="搜索算子" style="width: auto; margin: 10px 10px;" v-model="inputTheme" :search=true
+      <Input placeholder="搜索算子" style="width: auto; margin: 10px 10px;" v-model="inputOperator" :search=true
              @on-search="getOperatorById">
         <Icon type="ios-search" slot="suffix"/>
       </Input>
       <Button style="margin: 10px 10px;" type="primary" @click="getOperatorById">搜索</Button>
       <Button style="margin: 10px 10px;" type="success" @click="addOperator">添加</Button>
       <Button style="margin: 10px 10px;" type="error" @click="delOperatorById">删除</Button>
-      <tables stripe :loading="loading" ref="tables" v-model="tableData" :columns="columns"
+      <tables stripe :loading="loading" ref="tables" @on-edit="editOperator" v-model="tableData" :columns="columns"
               @on-selection-change="getOperatorById"/>
     </Card>
+    <Modal width=800 v-model="add" title="修改算子" @on-ok="saveOperator" @on-cancel="cancel">
+      <Row :gutter="16">
+        <i-Col span="3" offset="2">
+          <p style="font-size: 15px">Name</p>
+        </i-Col>
+        <i-Col span="5">
+          <i-Input v-model="modalValue.dataSourceName" placeholder="请输入..."></i-Input>
+        </i-Col>
+        <i-Col span="3" offset="2">
+          <p style="font-size: 15px">NameSpace</p>
+        </i-Col>
+        <i-Col span="5">
+          <i-Select v-model="modalValue.selectedType" @on-change="changeDataType">
+            <i-Option v-for="item in modalValue.type" :value="item.value" :key="item.value">{{ item.label }}</i-Option>
+          </i-Select>
+        </i-Col>
+      </Row>
+      <br>
+      <Row :gutter="16">
+        <i-Col span="3" offset="2">
+          <p style="font-size: 15px">Tag</p>
+        </i-Col>
+        <i-Col span="5">
+          <i-Input v-model="modalValue.ip" placeholder="请输入..."></i-Input>
+        </i-Col>
+        <i-Col span="3" offset="2">
+          <p style="font-size: 15px">MainClass</p>
+        </i-Col>
+        <i-Col span="5">
+          <i-Input v-model="modalValue.port" placeholder="请输入..."></i-Input>
+        </i-Col>
+      </Row>
+      <br>
+      <Row :gutter="16">
+        <i-Col span="3" offset="2">
+          <p style="font-size: 15px">RunTimeType</p>
+        </i-Col>
+        <i-Col span="5">
+          <i-Input v-model="modalValue.userName" placeholder="请输入..."></i-Input>
+        </i-Col>
+        <i-Col span="3" offset="2">
+          <p style="font-size: 15px">Description</p>
+        </i-Col>
+        <i-Col span="5">
+          <i-Input type="password" v-model="modalValue.password" placeholder="请输入..."></i-Input>
+        </i-Col>
+      </Row>
+      <br>
+      <Row :gutter="16">
+        <i-Col span="3" offset="2">
+          <p style="font-size: 15px">CreateTime</p>
+        </i-Col>
+        <i-Col span="5">
+          <Date-picker type="date" placeholder="选择日期" v-model="modalValue.dataBaseName" ></Date-picker>
+        </i-Col>
+        <i-Col span="3" offset="2">
+          <p style="font-size: 15px">上传文件</p>
+        </i-Col>
+        <i-Col span="5">
+          <Upload action="//jsonplaceholder.typicode.com/posts/">
+            <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
+          </Upload>
+        </i-Col>
+      </Row>
+      <br>
+
+      <Row slot="footer">
+        <i-Col span="4" offset="11">
+          <Button type="primary" @click="saveOperator">保存</Button>
+        </i-Col>
+        <i-Col span="4">
+          <Button @click="cancel">取消</Button>
+        </i-Col>
+      </Row>
+    </Modal>
   </div>
 </template>
 
@@ -54,7 +129,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.operatorDetail(params)
+                    this.editOperator(params)
                   }
                 }
               }, '修改')
@@ -63,7 +138,50 @@ export default {
           }
         }
       ],
-      tableData: []
+      tableData: [],
+      add: false,
+      editOradd: false,
+      inputOperator: '',
+      modalValue: {
+        dataSourceName: '',
+        type: [{
+          value: 'mysql',
+          label: 'mysql'
+        }
+          // {
+          //   value: 'oracle',
+          //   label: 'oracle'
+          // }
+        ],
+        // 数据源用途
+        purpose: [{
+          value: 0,
+          label: '抽取数据源'
+        }, {
+          value: 1,
+          label: '载入数据源'
+        }
+        ],
+        ip: '',
+        port: '',
+        userName: '',
+        password: '',
+        dataBaseName: '',
+        selectedType: 'mysql',
+        selectedPurpose: 0,
+        // oracle数据库包含模式名
+        schemeName: ''
+      },
+      purpose2: [{
+        value: 0,
+        label: '抽取数据源'
+      },
+      {
+        value: 1,
+        label: '载入数据源'
+      }
+      ],
+      loading: false
     }
   },
   methods: {
@@ -71,6 +189,36 @@ export default {
       console.log(params)
     },
 
+    editOperator (params) {
+      // modal框读取对应数据
+      console.log(params)
+      this.testResult = -1
+      this.add = true
+      this.editOradd = true
+      this.modalValue.id = params.row.id
+      this.modalValue.dataSourceName = params.row.name
+      this.modalValue.ip = params.row.ip
+      this.modalValue.port = params.row.port
+      this.modalValue.userName = params.row.username
+      this.modalValue.password = params.row.password
+      this.modalValue.dataBaseName = params.row.dataBaseName
+      this.modalValue.selectedType = params.row.type
+      this.modalValue.selectedPurpose = params.row.extract
+    },
+    saveOperator () {
+      if (this.editOradd) {
+        // 待更新
+        this.editDatasource()
+      } else {
+        this.addDatasource()
+      }
+    },
+    // 添加modal
+    cancel () {
+      this.add = false
+    }, // 确定
+    changeDataType (value) {
+    },
     getOperators (tag, namespace, name) {
       /**
        * 返回Operators全量数据
@@ -119,10 +267,6 @@ export default {
         url: '/operators/:id',
         method: 'delete'
       })
-    },
-
-    operatorDetail () {
-
     }
   },
   mounted () {
