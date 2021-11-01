@@ -23,27 +23,39 @@ export default {
         { title: '节点', key: 'email', editable: true },
         { title: 'Create-Time', key: 'createTime' },
         {
-          title: 'Handle',
-          key: 'handle',
-          options: ['delete'],
-          button: [
-            (h, params, vm) => {
-              return h('Popup', {
+          title: 'Action',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
                 props: {
-                  confirm: true,
-                  title: '你确定要删除吗?'
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
                 },
                 on: {
-                  'on-ok': () => {
-                    vm.$emit('on-delete', params)
-                    vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex))
+                  click: () => {
+                    this.show(params.index)
                   }
                 }
-              }, [
-                h('Button', '自定义删除')
-              ])
-            }
-          ]
+              }, 'View'),
+              h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.remove(params.index)
+                  }
+                }
+              }, 'Delete')
+            ])
+          }
         }
       ],
       tableData: []
@@ -57,6 +69,16 @@ export default {
       this.$refs.tables.exportCsv({
         filename: `table-${(new Date()).valueOf()}.csv`
       })
+    },
+    show (index) {
+      this.$Modal.info({
+        title: 'User Info',
+        content: `Name：${this.tableData[index].name}<br>Age：${this.tableData[index].email}<br>Address：${this.tableData[index].email}`
+      })
+    },
+
+    remove (index) {
+      this.tableData.splice(index, 1)
     }
   },
   mounted () {
