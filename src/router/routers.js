@@ -83,7 +83,8 @@ export default [
     name: 'pipeline',
     component: Main,
     meta: {
-      hideInBread: true
+      hideInBread: true,
+      title: '流水线'
     },
     children: [
       {
@@ -94,6 +95,15 @@ export default [
           title: '流水线'
         },
         component: () => import('@/view/pipeline/pipeline-page.vue')
+      },
+      {
+        path: 'pipeline_edit_page',
+        name: 'pipeline_edit_page',
+        meta: {
+          icon: 'ios-hammer',
+          title: '编辑'
+        },
+        component: () => import('@/view/pipeline/pipeline-edit-page.vue')
       }
     ]
   },
