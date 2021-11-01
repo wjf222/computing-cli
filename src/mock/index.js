@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 import { login, logout, getUserInfo } from './login'
-import { getTableData, getDragList, uploadImage, getOrgData, getTreeSelectData } from './data'
+import { getOperator, getTableData, getDragList, uploadImage, getOrgData, getTreeSelectData } from './data'
 import { getMessageInit, getContentByMsgId, hasRead, removeReaded, restoreTrash, messageCount } from './user'
 
 // 配置Ajax请求延时，可用来测试网络延迟大时项目中一些效果
@@ -27,5 +27,6 @@ Mock.mock(/\/get_tree_select_data/, getTreeSelectData)
 
 // computing-cli 自己配置的mock数据
 Mock.mock(/\/get_table_data/, getTableData)
+Mock.mock(/\/operators/, getOperator)
 
 export default Mock
