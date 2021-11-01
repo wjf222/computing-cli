@@ -94,7 +94,7 @@ export default [
           icon: 'ios-hammer',
           title: '流水线'
         },
-        component: () => import('@/view/pipeline/pipeline-page.vue')
+        component: () => import('@/view/pipeline/pipeline-table-page.vue')
       },
       {
         path: 'pipeline_edit_page',
