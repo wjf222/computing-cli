@@ -59,6 +59,7 @@ export default [
       icon: 'ios-book'
     }
   },
+
   {
     path: '/operator',
     name: 'operator',

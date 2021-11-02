@@ -9,7 +9,7 @@
 
 <script>
 import Tables from '_c/tables'
-import { getTableData } from '@/api/data'
+import { getPipelines } from '@/api/pipeline'
 export default {
   name: 'tables_page',
   components: {
@@ -21,6 +21,7 @@ export default {
         { title: 'Name', key: 'name', sortable: true },
         { title: 'Email', key: 'email', editable: true },
         { title: '节点', key: 'email', editable: true },
+        { title: 'Id', key: 'Id', editable: true },
         { title: 'Create-Time', key: 'createTime' },
         {
           title: 'Action',
@@ -39,7 +40,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.show(params.index)
+                    this.pipelineDetail(params.index)
                   }
                 }
               }, 'View'),
@@ -62,14 +63,13 @@ export default {
     }
   },
   methods: {
-    handleDelete (params) {
-      console.log(params)
-    },
+
     exportExcel () {
       this.$refs.tables.exportCsv({
         filename: `table-${(new Date()).valueOf()}.csv`
       })
     },
+
     show (index) {
       this.$Modal.info({
         title: 'User Info',
@@ -79,10 +79,24 @@ export default {
 
     remove (index) {
       this.tableData.splice(index, 1)
+    },
+
+    pipelineDetail (index) {
+      // console.log(this.tableData[index])
+      // console.log(this.tableData[index].name)
+      // console.log(this.tableData[index].email)
+      // console.log(this.tableData[index].Id)
+      var Id = this.tableData[index].Id
+      this.$router.push({
+        name: 'pipeline_edit_page',
+        params: {
+          id: Id
+        }
+      })
     }
   },
   mounted () {
-    getTableData().then(res => {
+    getPipelines().then(res => {
       this.tableData = res.data
     })
   }
