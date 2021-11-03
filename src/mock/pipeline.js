@@ -1,18 +1,19 @@
 import Mock from 'mockjs'
 import { doCustomTimes } from '@/libs/util'
-const Random = Mock.Random
+import { pipelinesData } from './data/pipeline-data'
+// const Random = Mock.Random
 
 export const getPipelines = (user, namespace, name) => {
-  let tableData = []
-  doCustomTimes(5, () => {
-    tableData.push(Mock.mock({
-      name: '@name',
-      email: '@email',
-      createTime: '@date',
-      Id: Random.integer(60, 100)
-    }))
-  })
-  return tableData
+  // let tableData = []
+  // doCustomTimes(5, () => {
+  //   tableData.push(Mock.mock({
+  //     name: '@name',
+  //     email: '@email',
+  //     createTime: '@date',
+  //     Id: Random.integer(60, 100)
+  //   }))
+  // })
+  return pipelinesData
 }
 
 export const getPipelineById = (id) => {
@@ -25,10 +26,16 @@ export const getPipelineById = (id) => {
    * 参数格式：
    * · 跟随请求路径
    */
-  return axios.request({
-    url: '/pipelines/:id',
-    method: 'get'
+  let data = []
+  doCustomTimes(5, () => {
+    tableData.push(Mock.mock({
+      name: '@name',
+      email: '@email',
+      createTime: '@date',
+      Id: Random.integer(60, 100)
+    }))
   })
+  return data
 }
 
 export const addPipeline = () => {

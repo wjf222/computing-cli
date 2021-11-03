@@ -1,7 +1,7 @@
 <template>
   <div>
     <Card>
-      <tables ref="tables" editable searchable search-place="top" v-model="tableData" :columns="columns" @on-delete="handleDelete"/>
+      <tables ref="tables" searchable inputmode="" search-place="top" v-model="tableData" :columns="columns" @on-delete="handleDelete"/>
       <Button style="margin: 10px 0;" type="primary" @click="exportExcel">导出为Csv文件</Button>
     </Card>
   </div>
@@ -11,18 +11,18 @@
 import Tables from '_c/tables'
 import { getPipelines } from '@/api/pipeline'
 export default {
-  name: 'tables_page',
+  name: 'pipeline_table_page',
   components: {
     Tables
   },
   data () {
     return {
       columns: [
-        { title: 'Name', key: 'name', sortable: true },
-        { title: 'Email', key: 'email', editable: true },
-        { title: '节点', key: 'email', editable: true },
-        { title: 'Id', key: 'Id', editable: true },
-        { title: 'Create-Time', key: 'createTime' },
+        { title: 'PipelineName', key: 'PipelineName', sortable: true },
+        { title: 'PipelineNamespace', key: 'PipelineNamespace', editable: true },
+        { title: 'UserName', key: 'UserName', editable: true },
+        { title: 'PipelineDescription', key: 'PipelineDescription', editable: true },
+        { title: 'Id', key: 'Id', sortable: true },
         {
           title: 'Action',
           key: 'action',
