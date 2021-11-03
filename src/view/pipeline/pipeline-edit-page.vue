@@ -1,53 +1,23 @@
 <template>
   <div>
-    <Row :gutter="14" style="margin-top: 14px;">
-      <i-col span="8">
-        <Card>
-          <p slot="title">
-            <Icon type="ios-color-wand"></Icon>
-            节点一
-          </p>
-          <Row type="flex" justify="center" align="middle" class="countto-page-row">
-            <div class="count-to-con">
-            </div>
+    <Row :gutter="20" style="margin-top: 14px;" type="flex" justify="start" align="middle" class="item-row">
+      <i-col :xs="12" :md="8" :lg="8" v-for="(item, i) in itemData" :key="`item-${i}`" style="margin-top: 14px;">
+        <card>
+          <p slot="title">节点{{ i }}</p>
+          <Row type="flex" justify="start" align="middle" class="item-row">
+            <p>{{ item.Name }}</p>
           </Row>
-        </Card>
+        </card>
       </i-col>
-      <i-col span="8" class="padding-left-10">
-        <Card>
-          <p slot="title">
-            <Icon type="ios-shuffle-strong"></Icon>
-            节点二
-          </p>
-          <Row type="flex" justify="center" align="middle" class="countto-page-row">
-            <div class="count-to-con">
-            </div>
-          </Row>
-        </Card>
-      </i-col>
-      <i-col span="8" class="padding-left-10">
-        <Card>
-          <p slot="title">
-            <Icon type="android-stopwatch"></Icon>
-            节点三
-          </p>
-          <Row type="flex" justify="center" align="middle" class="countto-page-row">
-            <div class="count-to-con">
-            </div>
-          </Row>
-        </Card>
-      </i-col>
-    </Row>
-    <Row :gutter="14" style="margin-top: 14px;">
-      <i-col span="8" class="padding-left-10">
+      <i-col :xs="12" :md="8" :lg="8" style="margin-top: 14px;">
         <Card>
           <p slot="title">
             <Icon type="android-stopwatch"></Icon>
             添加新节点
           </p>
-          <Row type="flex" justify="center" align="middle" class="countto-page-row">
-            <div class="count-to-con">
-            </div>
+          <Row type="flex" justify="center" align="middle" class="item-row">
+            <Icon type="android-stopwatch"></Icon>
+            添加新节点
           </Row>
         </Card>
       </i-col>
@@ -56,22 +26,29 @@
 </template>
 
 <script>
-import CountTo from '_c/count-to'
 
 export default {
-  name: 'count_to_page',
-  components: {
-    CountTo
-  },
+  name: 'pipeline_edit_page',
+  components: {},
   data () {
     return {
-      end: 0,
-      unit: [[3, '千多'], [4, '万多'], [5, '十万多']],
-      unit2: [[1, '十多'], [2, '百多'], [3, '千多'], [4, '万多'], [5, '十万多'], [6, '百万多'], [7, '千万多'], [8, '亿多']],
-      asynEndVal: 487,
-      integratedEndVal: 3
+      inforCardData: [
+        { title: '新增用户', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
+        { title: '累计点击', icon: 'md-locate', count: 232, color: '#19be6b' }
+
+      ],
+      itemData: [
+        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#2d8cf0' },
+        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
+        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
+        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
+        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
+        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
+        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' }
+      ]
     }
   },
+
   methods: {
     init () {
       this.id = this.$route.params.id
@@ -161,6 +138,7 @@ export default {
       // }
     }
   },
+
   mounted () {
     this.init()
   }
@@ -169,8 +147,9 @@ export default {
 
 <style lang="less">
 @baseColor: ~"#dc9387";
-.countto-page-row {
+.item-row {
   height: 200px;
+  padding-bottom: 10px;
 }
 
 .count-to-con {
