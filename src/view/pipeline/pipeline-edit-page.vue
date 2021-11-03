@@ -4,8 +4,8 @@
       <i-col :xs="12" :md="8" :lg="8" v-for="(item, i) in itemData" :key="`item-${i}`" style="margin-top: 14px;">
         <card>
           <p slot="title">节点{{ i }}</p>
-          <Row type="flex" justify="start" align="middle" class="item-row">
-            <p>{{ item.Name }}</p>
+          <Row type="flex" justify="center" align="middle" class="item-row">
+            <Button style="margin: 10px 10px;" type="info" @click="editItemModal">修改</Button>
           </Row>
         </card>
       </i-col>
@@ -17,26 +17,78 @@
           </p>
           <Row type="flex" justify="center" align="middle" class="item-row">
             <Icon type="android-stopwatch"></Icon>
-            添加新节点
+            <Button style="margin: 10px 10px;" type="success" @click="addItem">添加</Button>
           </Row>
         </Card>
       </i-col>
     </Row>
+    <Modal width=800 v-model="add" title="修改流水线" @on-ok="savePipeline" @on-cancel="cancel">
+      <Row :gutter="16">
+        <i-col span="4" offset="2">
+          <p style="font-size: 15px">名称</p>
+        </i-col>
+        <i-col span="12">
+          <i-input v-model="modalValue.PipelineName" placeholder="请输入..."></i-input>
+        </i-col>
+      </Row>
+      <br>
+      <Row :gutter="16">
+        <i-col span="4" offset="2">
+          <p style="font-size: 15px">命名空间</p>
+        </i-col>
+        <i-col span="12">
+          <i-input v-model="modalValue.PipelineNamespace" placeholder="请输入..."></i-input>
+        </i-col>
+      </Row>
+      <br>
+      <Row :gutter="16">
+        <i-col span="4" offset="2">
+          <p style="font-size: 15px">用户名</p>
+        </i-col>
+        <i-col span="12">
+          <i-input v-model="modalValue.UserName" placeholder="请输入..."></i-input>
+        </i-col>
+      </Row>
+      <br>
+      <Row :gutter="16">
+        <i-col span="4" offset="2">
+          <p style="font-size: 15px">描述</p>
+        </i-col>
+        <i-col span="12">
+          <i-input v-model="modalValue.PipelineDescription" placeholder="请输入..."></i-input>
+        </i-col>
+      </Row>
+      <br>
+      <Row slot="footer">
+        <i-col span="4" offset="11">
+          <Button type="primary" @click="savePipeline">保存</Button>
+        </i-col>
+        <i-col span="4">
+          <Button @click="cancel">取消</Button>
+        </i-col>
+      </Row>
+    </Modal>
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'pipeline_edit_page',
   components: {},
   data () {
     return {
-      inforCardData: [
-        { title: '新增用户', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
-        { title: '累计点击', icon: 'md-locate', count: 232, color: '#19be6b' }
+      // 新增数据源modal
+      add: false,
+      editOradd: false,
+      modalValue: {
+        PipelineName: '',
+        PipelineNamespace: '',
+        UserName: '',
+        PipelineDescription: ''
+      },
+      testResult: -1,
 
-      ],
+      // 数组
       itemData: [
         { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#2d8cf0' },
         { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
@@ -53,89 +105,107 @@ export default {
     init () {
       this.id = this.$route.params.id
       console.log(this.$route.params.id)
-      // if (this.pageType == 1) {
-      //   // 更新操作，进行赋值
-      //   this.isTestSql = 1
-      //   // 改成router
-      //   let strategy = this.$route.params.update_strategy
-      //   // console.log('created: ')
-      //   // console.log(strategy)
-      //   this.loadDataSources()
-      //   this.select_extract_dataSource = strategy.etlExtractDataSource.id
-      //   this.select_load_dataSource = strategy.etlLoadDataSource.id
-      //   let that = this
-      //   let param = {
-      //     dataId: strategy.etlExtractDataSource.id
-      //   }
-      //   axios({
-      //     method: 'post',
-      //     url: this.GLOBAL.etlUrl + 'api/get_tables',
-      //     withCredentials: true,
-      //     params: param
-      //   }).then(function (response) {
-      //     var data = response.data
-      //     if (data.status) {
-      //       let tables = data.tables
-      //       // 设置显示的table列表
-      //       let ls = []
-      //       for (let i = 0; i < tables.length; i++) {
-      //         ls.push({
-      //           key: tables[i],
-      //           label: tables[i]
-      //         })
-      //       }
-      //       that.extract_table = ls
-      //       that.initUpdatePage()
-      //     } else {
-      //       console.log('所选取的数据源为无效数据源！')
-      //     }
-      //   })
-      //   let param2 = {
-      //     dataId: strategy.etlExtractDataSource.id,
-      //     tableName: strategy.readtables
-      //   }
-      //   let extractColumns = this.splitStr(strategy.readcolumns)
-      //   axios({
-      //     method: 'post',
-      //     url: this.GLOBAL.etlUrl + 'api/get_columns',
-      //     withCredentials: true,
-      //     params: param2
-      //   }).then(function (response) {
-      //     var data = response.data
-      //     if (data['status']) {
-      //       let columns = data.columns
-      //       // 设置显示的column列表
-      //       let ls = []
-      //       for (let i = 0; i < columns.length; i++) {
-      //         ls.push({
-      //           key: columns[i],
-      //           label: columns[i]
-      //         })
-      //       }
-      //       // 穿梭框内所有字段
-      //       that.extract_column = ls
-      //       let selectedExtractColumns = []
-      //       for (let i = 0; i < ls.length; i++) {
-      //         for (let j = 0; j < extractColumns.length; j++) {
-      //           // if (ls[i]['key'].indexOf(extractColumns[j]) >= 0) {
-      //           // console.log(ls[i]['key'].split('（')[0] + '|' + extractColumns[j])
-      //           // 防止空格，换行符等等显示两个字符串一致但是不相等
-      //           let a = ls[i]['key'].split('（')[0].trim().replace(/\+/g, '').replace(/[ ]/g, '').replace(/[\r\n]/g, '')
-      //           let b = extractColumns[j].trim().replace(/\+/g, '').replace(/[ ]/g, '').replace(/[\r\n]/g, '')
-      //           if (a === b) {
-      //             selectedExtractColumns.push(ls[i]['key'])
-      //           }
-      //         }
-      //       }
-      //       that.selected_extract_column = selectedExtractColumns
-      //     } else {
-      //       console.log('获取列名后台错误！')
-      //     }
-      //   })
-      //   this.form_sql = strategy.remark
-      //   this.changeLoadSource(strategy.etlLoadDataSource.id)
-      //   this.getTables(strategy.etlExtractDataSource.id)
-      // }
+    },
+
+    editItemModal (params) {
+      // modal框读取对应数据
+      console.log(params)
+      this.testResult = -1
+      this.add = true
+      this.editOradd = true
+      this.modalValue.PipelineName = params.row.PipelineName
+      this.modalValue.PipelineNamespace = params.row.PipelineNamespace
+      this.modalValue.UserName = params.row.userName
+      this.modalValue.PipelineDescription = params.row.PipelineDescription
+    },
+
+    saveItem () {
+      if (this.editOradd) {
+        // 待更新
+        this.modifyItem()
+      } else {
+        this.addItem()
+      }
+    },
+
+    // 添加modal
+    cancel () {
+      this.add = false
+    }, // 确定
+
+    changeDataType (value) {
+    },
+
+    getItem (id) {
+      /**
+       * 返回指定 pipeline 下的所有模组
+       *
+       * 参数：
+       * · id, string
+       *
+       * 参数格式：
+       * · 跟随请求路径
+       */
+      return axios.request({
+        url: '/pipelines/:id/items',
+        method: 'get'
+      })
+    },
+
+    addItem (id) {
+      /**
+       * 在指定 pipeline 下的创建一组模组
+       *
+       * 参数：
+       * [
+       *   {
+       *      //必选参数
+       *      “Name”: "x",
+       *      "Namespace": "xx",
+       *      "ImageId": 1,
+       *      "OperatorId": 1,
+       *      //可选参数
+       *      "ObjectDataId": 1,
+       *      "Params": {}
+       *   }
+       * ]
+       *
+       * 参数格式：
+       * · json
+       * · 跟随请求路径
+       */
+      return axios.request({
+        url: '/pipelines/:id/items',
+        method: 'post'
+      })
+    },
+
+    modifyItem (id) {
+      /**
+       * 在指定 pipeline 下的更新一组模组
+       *
+       * 参数：
+       * [
+       *   {
+       *      //必选参数
+       *      “Name”: "x",
+       *      "Namespace": "xx",
+       *      "ImageId": 1,
+       *      "OperatorId": 1,
+       *      //可选参数
+       *      "ObjectDataId": 1,
+       *      "Params": {}
+       *   }
+       * ]
+       *
+       * 参数格式：
+       * · json
+       * · 跟随请求路径
+       */
+      return axios.request({
+        url: '/pipelines/:id/items',
+        method: 'patch'
+      })
     }
   },
 
