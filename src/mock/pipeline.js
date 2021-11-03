@@ -4,15 +4,6 @@ import { pipelinesData } from './data/pipeline-data'
 // const Random = Mock.Random
 
 export const getPipelines = (user, namespace, name) => {
-  // let tableData = []
-  // doCustomTimes(5, () => {
-  //   tableData.push(Mock.mock({
-  //     name: '@name',
-  //     email: '@email',
-  //     createTime: '@date',
-  //     Id: Random.integer(60, 100)
-  //   }))
-  // })
   return pipelinesData
 }
 

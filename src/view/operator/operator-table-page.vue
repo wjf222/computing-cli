@@ -14,77 +14,77 @@
     </Card>
     <Modal width=800 v-model="add" title="修改算子" @on-ok="saveOperator" @on-cancel="cancel">
       <Row :gutter="16">
-        <i-Col span="3" offset="2">
+        <i-col span="3" offset="2">
           <p style="font-size: 15px">Name</p>
-        </i-Col>
-        <i-Col span="5">
-          <i-Input v-model="modalValue.dataSourceName" placeholder="请输入..."></i-Input>
-        </i-Col>
-        <i-Col span="3" offset="2">
+        </i-col>
+        <i-col span="5">
+          <i-input v-model="modalValue.dataSourceName" placeholder="请输入..."></i-input>
+        </i-col>
+        <i-col span="3" offset="2">
           <p style="font-size: 15px">NameSpace</p>
-        </i-Col>
-        <i-Col span="5">
+        </i-col>
+        <i-col span="5">
           <i-Select v-model="modalValue.selectedType" @on-change="changeDataType">
             <i-Option v-for="item in modalValue.type" :value="item.value" :key="item.value">{{ item.label }}</i-Option>
           </i-Select>
-        </i-Col>
+        </i-col>
       </Row>
       <br>
       <Row :gutter="16">
-        <i-Col span="3" offset="2">
+        <i-col span="3" offset="2">
           <p style="font-size: 15px">Tag</p>
-        </i-Col>
-        <i-Col span="5">
-          <i-Input v-model="modalValue.ip" placeholder="请输入..."></i-Input>
-        </i-Col>
-        <i-Col span="3" offset="2">
+        </i-col>
+        <i-col span="5">
+          <i-input v-model="modalValue.ip" placeholder="请输入..."></i-input>
+        </i-col>
+        <i-col span="3" offset="2">
           <p style="font-size: 15px">MainClass</p>
-        </i-Col>
-        <i-Col span="5">
-          <i-Input v-model="modalValue.port" placeholder="请输入..."></i-Input>
-        </i-Col>
+        </i-col>
+        <i-col span="5">
+          <i-input v-model="modalValue.port" placeholder="请输入..."></i-input>
+        </i-col>
       </Row>
       <br>
       <Row :gutter="16">
-        <i-Col span="3" offset="2">
+        <i-col span="3" offset="2">
           <p style="font-size: 15px">RunTimeType</p>
-        </i-Col>
-        <i-Col span="5">
-          <i-Input v-model="modalValue.userName" placeholder="请输入..."></i-Input>
-        </i-Col>
-        <i-Col span="3" offset="2">
+        </i-col>
+        <i-col span="5">
+          <i-input v-model="modalValue.userName" placeholder="请输入..."></i-input>
+        </i-col>
+        <i-col span="3" offset="2">
           <p style="font-size: 15px">Description</p>
-        </i-Col>
-        <i-Col span="5">
-          <i-Input type="password" v-model="modalValue.password" placeholder="请输入..."></i-Input>
-        </i-Col>
+        </i-col>
+        <i-col span="5">
+          <i-input type="password" v-model="modalValue.password" placeholder="请输入..."></i-input>
+        </i-col>
       </Row>
       <br>
       <Row :gutter="16">
-        <i-Col span="3" offset="2">
+        <i-col span="3" offset="2">
           <p style="font-size: 15px">CreateTime</p>
-        </i-Col>
-        <i-Col span="5">
+        </i-col>
+        <i-col span="5">
           <Date-picker type="date" placeholder="选择日期" v-model="modalValue.dataBaseName" ></Date-picker>
-        </i-Col>
-        <i-Col span="3" offset="2">
+        </i-col>
+        <i-col span="3" offset="2">
           <p style="font-size: 15px">上传文件</p>
-        </i-Col>
-        <i-Col span="5">
+        </i-col>
+        <i-col span="5">
           <Upload action="//jsonplaceholder.typicode.com/posts/">
             <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
           </Upload>
-        </i-Col>
+        </i-col>
       </Row>
       <br>
 
       <Row slot="footer">
-        <i-Col span="4" offset="11">
+        <i-col span="4" offset="11">
           <Button type="primary" @click="saveOperator">保存</Button>
-        </i-Col>
-        <i-Col span="4">
+        </i-col>
+        <i-col span="4">
           <Button @click="cancel">取消</Button>
-        </i-Col>
+        </i-col>
       </Row>
     </Modal>
   </div>
@@ -210,6 +210,7 @@ export default {
       this.modalValue.selectedType = params.row.type
       this.modalValue.selectedPurpose = params.row.extract
     },
+
     saveOperator () {
       if (this.editOradd) {
         // 待更新
