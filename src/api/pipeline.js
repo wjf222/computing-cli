@@ -1,6 +1,6 @@
 import axios from '@/libs/api.request'
 
-export const getPipelines = (user, namespace, name) => {
+export const getPipelines = (namespace, name) => {
   /**
    * 返回符合要求的pipeline列表
    * 1. user为空 返回空列表；
@@ -19,7 +19,12 @@ export const getPipelines = (user, namespace, name) => {
    */
   return axios.request({
     url: '/pipelines',
-    method: 'get'
+    method: 'get',
+    withCredentials: true,
+    params: {
+      namespace: namespace,
+      name: name
+    }
   })
 }
 
@@ -46,19 +51,27 @@ export const addPipeline = () => {
    * 参数：
    * {
    *   //必选参数
-   *   “PipelineName”: "a",
-   *   "PipelineNamespace": "24344556467532b",
+   *   “PipelineName”: 'a',
+   *   'PipelineNamespace': '24344556467532b',
    *   //可选参数
-   *   "UserName": "x",
-   *   "PipelineDescription": "x"
+   *   'UserName': 'x',
+   *   'PipelineDescription': 'x'
    * }
    *
    * 参数格式：
    * · json
    */
   return axios.request({
-    url: '/pipelines',
-    method: 'post'
+    url: `/pipelines/`,
+    method: 'post',
+    params: {
+      // 必选参数
+      PipelineName: 'a',
+      PipelineNamespace: '24344556467532b',
+      // 可选参数
+      PipelineDescription: 'x',
+      PipelineGlobalParams: 'k1:v1;k2:v2'
+    }
   })
 }
 
@@ -73,7 +86,7 @@ export const delPipelineById = (id) => {
    * · URL末尾添加
    */
   return axios.request({
-    url: '/pipelines/:id',
+    url: `/pipelines/${id}`,
     method: 'delete'
   })
 }
@@ -83,13 +96,13 @@ export const uploadPipelineById = (id) => {
    * 对 pipeline 执⾏操作
    *
    * 参数：
-   * · op, string, 支持 "start" 和 "stop" ，在URL末尾添加
+   * · op, string, 支持 'start' 和 'stop' ，在URL末尾添加
    *
    * 参数格式：
    * · URL末尾添加
    */
   return axios.request({
-    url: '/pipelines/:id',
+    url: `/pipelines/${id}`,
     method: 'put'
   })
 }
@@ -101,11 +114,11 @@ export const modifyPipeline = (id) => {
    * 参数：
    * {
    *   //必选参数
-   *   “PipelineName”: "a",
-   *   "PipelineNamespace": "24344556467532b",
+   *   “PipelineName”: 'a',
+   *   'PipelineNamespace': '24344556467532b',
    *   //可选参数
-   *   "UserName": "x",
-   *   "PipelineDescription": "x"
+   *   'UserName': 'x',
+   *   'PipelineDescription': 'x'
    * }
    *
    * 参数格式：
@@ -113,13 +126,13 @@ export const modifyPipeline = (id) => {
    * · 跟随请求路径
    */
   return axios.request({
-    url: '/pipelines/:id',
+    url: `/pipelines/${id}`,
     method: 'patch'
   })
 }
 
 // TODO item
-export const getItemById = (id) => {
+export const getItem = (id) => {
   /**
    * 返回指定 pipeline 下的所有模组
    *
@@ -130,12 +143,13 @@ export const getItemById = (id) => {
    * · 跟随请求路径
    */
   return axios.request({
-    url: '/pipelines/:id/items',
-    method: 'get'
+    url: `/pipelines/${id}/items`,
+    method: 'get',
+    withCredentials: true
   })
 }
 
-export const addItemById = (id) => {
+export const addItem = (id) => {
   /**
    * 在指定 pipeline 下的创建一组模组
    *
@@ -143,13 +157,13 @@ export const addItemById = (id) => {
    * [
    *   {
    *      //必选参数
-   *      “Name”: "x",
-   *      "Namespace": "xx",
-   *      "ImageId": 1,
-   *      "OperatorId": 1,
+   *      “Name”: 'x',
+   *      'Namespace': 'xx',
+   *      'ImageId': 1,
+   *      'OperatorId': 1,
    *      //可选参数
-   *      "ObjectDataId": 1,
-   *      "Params": {}
+   *      'ObjectDataId': 1,
+   *      'Params': {}
    *   }
    * ]
    *
@@ -158,35 +172,19 @@ export const addItemById = (id) => {
    * · 跟随请求路径
    */
   return axios.request({
-    url: '/pipelines/:id/items',
+    url: `/pipelines/${id}/items`,
     method: 'post'
   })
 }
 
-export const modifyItemById = (id) => {
-  /**
-   * 在指定 pipeline 下的更新一组模组
-   *
-   * 参数：
-   * [
-   *   {
-   *      //必选参数
-   *      “Name”: "x",
-   *      "Namespace": "xx",
-   *      "ImageId": 1,
-   *      "OperatorId": 1,
-   *      //可选参数
-   *      "ObjectDataId": 1,
-   *      "Params": {}
-   *   }
-   * ]
-   *
-   * 参数格式：
-   * · json
-   * · 跟随请求路径
-   */
+/**
+ * 在指定 pipeline 下的更新一组模组
+ * @param id
+ * @returns {*}
+ */
+export const modifyItem = (id) => {
   return axios.request({
-    url: '/pipelines/:id/items',
+    url: `/pipelines/${id}/items`,
     method: 'patch'
   })
 }

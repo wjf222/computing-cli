@@ -22,40 +22,77 @@
         </Card>
       </i-col>
     </Row>
-    <Modal width=800 v-model="add" title="修改流水线" @on-ok="savePipeline" @on-cancel="cancel">
+    <Modal width=800 v-model="add" title="修改模组" @on-ok="saveItem" @on-cancel="cancel">
       <Row :gutter="16">
-        <i-col span="4" offset="2">
-          <p style="font-size: 15px">名称</p>
+        <i-col span="3" offset="2">
+          <p style="font-size: 15px">Name</p>
         </i-col>
-        <i-col span="12">
-          <i-input v-model="modalValue.PipelineName" placeholder="请输入..."></i-input>
+        <i-col span="5">
+          <Input v-model="modalValue.dataSourceName" placeholder="请输入..."></Input>
+        </i-col>
+        <i-col span="3" offset="2">
+          <p style="font-size: 15px">NameSpace</p>
+        </i-col>
+        <i-col span="5">
+          <Select v-model="modalValue.selectedType" @on-change="changeDataType">
+            <Option v-for="item in modalValue.type" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
         </i-col>
       </Row>
       <br>
       <Row :gutter="16">
-        <i-col span="4" offset="2">
-          <p style="font-size: 15px">命名空间</p>
+        <i-col span="3" offset="2">
+          <p style="font-size: 15px">Tag</p>
         </i-col>
-        <i-col span="12">
-          <i-input v-model="modalValue.PipelineNamespace" placeholder="请输入..."></i-input>
+        <i-col span="5">
+          <Input v-model="modalValue.ip" placeholder="请输入..."></Input>
         </i-col>
-      </Row>
-      <br>
-      <Row :gutter="16">
-        <i-col span="4" offset="2">
-          <p style="font-size: 15px">用户名</p>
+        <i-col span="3" offset="2">
+          <p style="font-size: 15px">MainClass</p>
         </i-col>
-        <i-col span="12">
-          <i-input v-model="modalValue.UserName" placeholder="请输入..."></i-input>
+        <i-col span="5">
+          <Input v-model="modalValue.port" placeholder="请输入..."></Input>
         </i-col>
       </Row>
       <br>
       <Row :gutter="16">
-        <i-col span="4" offset="2">
+        <i-col span="3" offset="2">
+          <p style="font-size: 15px">RunTimeType</p>
+        </i-col>
+        <i-col span="5">
+          <Input v-model="modalValue.userName" placeholder="请输入..."></Input>
+        </i-col>
+        <i-col span="3" offset="2">
+          <p style="font-size: 15px">Description</p>
+        </i-col>
+        <i-col span="5">
+          <Input type="password" v-model="modalValue.password" placeholder="请输入..."></Input>
+        </i-col>
+      </Row>
+      <br>
+      <Row :gutter="16">
+        <i-col span="3" offset="2">
+          <p style="font-size: 15px">CreateTime</p>
+        </i-col>
+        <i-col span="5">
+          <Date-picker type="date" placeholder="选择日期" v-model="modalValue.dataBaseName" ></Date-picker>
+        </i-col>
+        <i-col span="3" offset="2">
+          <p style="font-size: 15px">上传文件</p>
+        </i-col>
+        <i-col span="5">
+          <Upload action="//jsonplaceholder.typicode.com/posts/">
+            <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
+          </Upload>
+        </i-col>
+      </Row>
+      <br>
+      <Row :gutter="16">
+        <i-col span="3" offset="2">
           <p style="font-size: 15px">描述</p>
         </i-col>
-        <i-col span="12">
-          <i-input v-model="modalValue.PipelineDescription" placeholder="请输入..."></i-input>
+        <i-col span="13">
+          <Input v-model="modalValue.Description" placeholder="请输入..."></Input>
         </i-col>
       </Row>
       <br>
@@ -72,6 +109,8 @@
 </template>
 
 <script>
+import { getItem } from '@/api/pipeline'
+
 export default {
   name: 'pipeline_edit_page',
   components: {},
@@ -79,24 +118,41 @@ export default {
     return {
       // 新增数据源modal
       add: false,
-      editOradd: false,
+      editOrAdd: false,
       modalValue: {
-        PipelineName: '',
-        PipelineNamespace: '',
-        UserName: '',
-        PipelineDescription: ''
+        // 必选
+        Name: '',
+        ImageId: 1,
+        OperatorId: 1,
+        // 可选
+        Params: '',
+        Arguments: '',
+        Envs: '',
+        Description: ''
       },
       testResult: -1,
 
       // 数组
       itemData: [
-        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#2d8cf0' },
-        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
-        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
-        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
-        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
-        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' },
-        { Name: 'x', Namespace: 'xx', ImageId: 1, OperatorId: 1, ObjectDataId: 1, Params: {}, color: '#ff9900' }
+        {
+          ID: 1,
+          CreatedAt: '',
+          UpdatedAt: '',
+          PipelineId: 1,
+          Name: '',
+          Namespace: '',
+          Type: '',
+          Num: 0,
+          BatchNum: 0,
+          ImageId: 1,
+          OperatorId: 1,
+          ResourceId: 0,
+          ItemStatus: 0,
+          Params: '',
+          Arguments: '',
+          Envs: '',
+          Description: ''
+        }
       ]
     }
   },
@@ -104,15 +160,25 @@ export default {
   methods: {
     init () {
       this.id = this.$route.params.id
-      console.log(this.$route.params.id)
+      getItem(this.id).then(res => {
+        console.log(res)
+      })
     },
 
+    changeDataType (value) {
+      // TODO 获取对应值的候选项
+    },
+
+    /**
+     * 打开modal框，并将数据填写在对应位置
+     * @param params
+     */
     editItemModal (params) {
-      // modal框读取对应数据
+      // TODO 展示并允许修改
       console.log(params)
       this.testResult = -1
       this.add = true
-      this.editOradd = true
+      this.editOrAdd = true
       this.modalValue.PipelineName = params.row.PipelineName
       this.modalValue.PipelineNamespace = params.row.PipelineNamespace
       this.modalValue.UserName = params.row.userName
@@ -120,7 +186,7 @@ export default {
     },
 
     saveItem () {
-      if (this.editOradd) {
+      if (this.editOrAdd) {
         // 待更新
         this.modifyItem()
       } else {
@@ -128,84 +194,29 @@ export default {
       }
     },
 
-    // 添加modal
+    /**
+     * 关闭modal框
+     */
     cancel () {
       this.add = false
-    }, // 确定
-
-    changeDataType (value) {
     },
 
-    getItem (id) {
-      /**
-       * 返回指定 pipeline 下的所有模组
-       *
-       * 参数：
-       * · id, string
-       *
-       * 参数格式：
-       * · 跟随请求路径
-       */
-      return axios.request({
-        url: '/pipelines/:id/items',
-        method: 'get'
-      })
-    },
-
+    /**
+     * 添加item
+     * @param id
+     * @returns {*}
+     */
     addItem (id) {
-      /**
-       * 在指定 pipeline 下的创建一组模组
-       *
-       * 参数：
-       * [
-       *   {
-       *      //必选参数
-       *      “Name”: "x",
-       *      "Namespace": "xx",
-       *      "ImageId": 1,
-       *      "OperatorId": 1,
-       *      //可选参数
-       *      "ObjectDataId": 1,
-       *      "Params": {}
-       *   }
-       * ]
-       *
-       * 参数格式：
-       * · json
-       * · 跟随请求路径
-       */
-      return axios.request({
-        url: '/pipelines/:id/items',
-        method: 'post'
-      })
+      // TODO 添加item
     },
 
+    /**
+     * 编辑item
+     * @param id
+     * @returns {*}
+     */
     modifyItem (id) {
-      /**
-       * 在指定 pipeline 下的更新一组模组
-       *
-       * 参数：
-       * [
-       *   {
-       *      //必选参数
-       *      “Name”: "x",
-       *      "Namespace": "xx",
-       *      "ImageId": 1,
-       *      "OperatorId": 1,
-       *      //可选参数
-       *      "ObjectDataId": 1,
-       *      "Params": {}
-       *   }
-       * ]
-       *
-       * 参数格式：
-       * · json
-       * · 跟随请求路径
-       */
-      return axios.request({
-        url: '/pipelines/:id/items',
-        method: 'patch'
-      })
+      // TODO 编辑item
     }
   },
 

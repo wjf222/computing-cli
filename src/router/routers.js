@@ -98,7 +98,7 @@ export default [
         component: () => import('@/view/pipeline/pipeline-table-page.vue')
       },
       {
-        path: 'pipeline_edit_page',
+        path: '/edit/:id',
         name: 'pipeline_edit_page',
         meta: {
           icon: 'ios-hammer',
