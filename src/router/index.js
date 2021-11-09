@@ -8,6 +8,18 @@ import config from '@/config'
 const { homeName } = config
 
 Vue.use(Router)
+// 【添加代码】解决vue-router在3.0版本以上重复点路由报错
+// push
+const VueRouterPush = Router.prototype.push
+Router.prototype.push = function push (to) {
+  return VueRouterPush.call(this, to).catch(err => err)
+}
+
+// replace
+const VueRouterReplace = Router.prototype.replace
+Router.prototype.replace = function replace (to) {
+  return VueRouterReplace.call(this, to).catch(err => err)
+}
 const router = new Router({
   routes,
   mode: 'history'

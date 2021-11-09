@@ -1,5 +1,4 @@
 import Main from '@/components/main'
-import parentView from '@/components/parent-view'
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -46,20 +45,11 @@ export default [
           notCache: true,
           icon: 'md-home'
         },
-        component: () => import('@/view/single-page/home')
+        // component: () => import('@/view/single-page/home')
+        component: resolve => require(['@/view/single-page/home'], resolve)
       }
     ]
   },
-  {
-    path: '',
-    name: 'doc',
-    meta: {
-      title: '文档',
-      href: 'https://lison16.github.io/iview-admin-doc/#/',
-      icon: 'ios-book'
-    }
-  },
-
   {
     path: '/operator',
     name: 'operator',
@@ -108,7 +98,6 @@ export default [
       }
     ]
   },
-
   {
     path: '/ETL',
     name: 'ETL工具',
@@ -125,8 +114,8 @@ export default [
           icon: 'md-funnel',
           title: '数据源管理'
         },
-        component: () => import('@/view/ETL-page/datasource.vue')
-        // component: resolve => require(['@/view/ETL-page/datasource.vue'],resolve)
+        // component: () => import('@/view/ETL-page/datasource.vue')
+        component: resolve => require(['@/view/ETL-page/datasource.vue'], resolve)
       },
       {
         path: '/themeManage',
@@ -135,9 +124,8 @@ export default [
           icon: 'md-funnel',
           title: '主题管理'
         },
-        component: () => import('@/view/ETL-page/theme.vue')
-        // 懒加载
-        // component: resolve => require(['@/view/ETL-page/theme.vue'],resolve)
+        // component: () => import('@/view/ETL-page/theme.vue')
+        component: resolve => require(['@/view/ETL-page/theme.vue'], resolve)
       },
       {
         path: '/strategyManage',
@@ -146,8 +134,8 @@ export default [
           icon: 'md-funnel',
           title: '策略管理'
         },
-        component: () => import('@/view/ETL-page/strategy.vue')
-        // component: resolve => require(['@/view/ETL-page/strategy.vue'],resolve)
+        // component: () => import('@/view/ETL-page/strategy.vue')
+        component: resolve => require(['@/view/ETL-page/strategy.vue'], resolve)
       },
       {
         path: '/etlStart',
@@ -156,35 +144,181 @@ export default [
           icon: 'md-funnel',
           title: '策略启动'
         },
-        component: () => import('@/view/ETL-page/etl_start.vue')
-        // component: resolve => require(['@/view/ETL-page/etl_start.vue'],resolve)
+        // component: () => import('@/view/ETL-page/etl_start.vue')
+        component: resolve => require(['@/view/ETL-page/etl_start.vue'], resolve)
       }
+      // {
+      //   path: '/demo',
+      //   name: '动态基线可视化demo',
+      //   meta: {
+      //     icon: 'md-funnel',
+      //     title: '动态基线可视化demo'
+      //   },
+      //   component: () => import('@/view/ETL-page/demo.vue')
+      // }
     ]
   },
-
   {
-    path: '/join',
-    name: 'join',
-    component: Main,
+    path: '/analysis',
+    name: '智能运维算法分析',
     meta: {
-      hideInBread: true,
-      hideInMenu: true
+      icon: 'md-menu',
+      title: '智能运维算法分析'
     },
+    component: Main,
     children: [
       {
-        path: 'join_page',
-        name: 'join_page',
+        path: 'meta-config',
+        name: '算法配置',
         meta: {
-          icon: '_qq',
-          title: 'baidu'
+          icon: 'md-funnel',
+          title: '算法配置'
         },
-        component: () => import('@/view/join-page.vue')
+        // component: () => import('@/view/analysis-page/meta-config.vue')
+        component: resolve => require(['@/view/analysis-page/meta-config.vue'], resolve)
+      },
+      {
+        path: 'job-config',
+        name: '分析任务配置',
+        meta: {
+          icon: 'md-funnel',
+          title: '分析任务配置'
+        },
+        // component: () => import('@/view/analysis-page/job-config.vue')
+        component: resolve => require(['@/view/analysis-page/job-config.vue'], resolve)
       }
     ]
   },
+  // 知识库
   {
-    path: '/message',
-    name: 'message',
+    path: '/konwledgeDatabase',
+    name: '知识库',
+    meta: {
+      icon: 'md-menu',
+      title: '知识库'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'tag-manager',
+        name: '标签管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '标签管理'
+        },
+        // component: () => import ('@/view/knowledge-page/tag-manager.vue')
+        component: resolve => require(['@/view/knowledge-page/tag-manager.vue'], resolve)
+      },
+      {
+        path: 'crawl',
+        name: '爬虫管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '爬虫管理'
+        },
+        // component: () => import('@/view/knowledge-page/crawl.vue')
+        component: resolve => require(['@/view/knowledge-page/crawl.vue'], resolve)
+      },
+      {
+        path: 'knowledge',
+        name: '知识库管理',
+        meta: {
+          icon: 'md-funnel',
+          title: '知识库管理'
+        },
+        // component: () => import ('@/view/knowledge-page/knowledge.vue')
+        component: resolve => require(['@/view/knowledge-page/knowledge.vue'], resolve)
+      }
+    ]
+  },
+  // //demo图件
+  // {
+  //   path: '/demoChart',
+  //   name: 'demo图件',
+  //   meta: {
+  //     icon: 'md-menu',
+  //     title: 'demo动态图件'
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: '/demo',
+  //       name: '动态基线可视化demo图件',
+  //       meta: {
+  //         icon: 'md-funnel',
+  //         title: '动态基线可视化demo图件'
+  //       },
+  //       // component: () => import('@/view/ETL-page/demo.vue')
+  //         component: resolve => require(['@/view/ETL-page/demo.vue'],resolve)
+  //     },
+  //
+  //   ]
+  // },
+  {
+    path: '/algorithm',
+    name: '算法场景',
+    meta: {
+      icon: 'md-flower',
+      title: '算法场景'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'alert-algo',
+        name: '告警智能合并',
+        meta: {
+          icon: 'md-funnel',
+          title: '告警智能合并'
+        },
+        component: resolve => require(['@/view/algorithm-page/Alert.vue'], resolve)
+      }, {
+        path: 'baseline',
+        name: '动态基线算法',
+        meta: {
+          icon: 'md-funnel',
+          title: '告警智能合并'
+        },
+        component: resolve => require(['@/view/algorithm-page/Baseline.vue'], resolve)
+      }, {
+        path: 'state-evaluation',
+        name: '状态评价算法',
+        meta: {
+          icon: 'md-funnel',
+          title: '状态评估算法'
+        },
+        component: resolve => require(['@/view/algorithm-page/StateEvaluation.vue'], resolve)
+      }, {
+        path: 'root',
+        name: '故障根因算法',
+        meta: {
+          icon: 'md-funnel',
+          title: '故障根因算法'
+        },
+        component: resolve => require(['@/view/algorithm-page/Root.vue'], resolve)
+      },
+      {
+        path: 'timeseries',
+        name: '时序关联算法',
+        meta: {
+          icon: 'md-funnel',
+          title: '时序关联算法'
+        },
+        component: resolve => require(['@/view/algorithm-page/TimeSeries.vue'], resolve)
+      }
+    ]
+  },
+  // {
+  //   path: 'ETL编辑',
+  //   name: 'ETL编辑',
+  //   meta: {
+  //     icon: 'md-funnel',
+  //     title: 'ETL策略编辑'
+  //   },
+  //   component: () => import('@/view/ETL-page/etlEdit.vue')
+  // }
+  {
+    path: '/etlEdit',
+    name: 'etlEdit',
     component: Main,
     meta: {
       hideInBread: true,
@@ -192,357 +326,35 @@ export default [
     },
     children: [
       {
-        path: 'message_page',
-        name: 'message_page',
+        path: 'etlEdit_page',
+        name: 'etlEdit_page',
         meta: {
           icon: 'md-notifications',
-          title: '消息中心'
+          title: 'ETL策略编辑'
         },
-        component: () => import('@/view/single-page/message/index.vue')
+        // component: () => import('@/view/ETL-page/etlEdit.vue')
+        component: resolve => require(['@/view/ETL-page/etlEdit.vue'], resolve)
       }
     ]
   },
   {
-    path: '/components',
-    name: 'components',
-    meta: {
-      icon: 'logo-buffer',
-      title: '组件'
-    },
+    path: '/etlCustomEdit',
+    name: 'etlCustomEdit',
     component: Main,
-    children: [
-      {
-        path: 'tree_select_page',
-        name: 'tree_select_page',
-        meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '树状下拉选择器'
-        },
-        component: () => import('@/view/components/tree-select/index.vue')
-      },
-      {
-        path: 'count_to_page',
-        name: 'count_to_page',
-        meta: {
-          icon: 'md-trending-up',
-          title: '数字渐变'
-        },
-        component: () => import('@/view/components/count-to/count-to.vue')
-      },
-      {
-        path: 'drag_list_page',
-        name: 'drag_list_page',
-        meta: {
-          icon: 'ios-infinite',
-          title: '拖拽列表'
-        },
-        component: () => import('@/view/components/drag-list/drag-list.vue')
-      },
-      {
-        path: 'drag_drawer_page',
-        name: 'drag_drawer_page',
-        meta: {
-          icon: 'md-list',
-          title: '可拖拽抽屉'
-        },
-        component: () => import('@/view/components/drag-drawer')
-      },
-      {
-        path: 'org_tree_page',
-        name: 'org_tree_page',
-        meta: {
-          icon: 'ios-people',
-          title: '组织结构树'
-        },
-        component: () => import('@/view/components/org-tree')
-      },
-      {
-        path: 'tree_table_page',
-        name: 'tree_table_page',
-        meta: {
-          icon: 'md-git-branch',
-          title: '树状表格'
-        },
-        component: () => import('@/view/components/tree-table/index.vue')
-      },
-      {
-        path: 'cropper_page',
-        name: 'cropper_page',
-        meta: {
-          icon: 'md-crop',
-          title: '图片裁剪'
-        },
-        component: () => import('@/view/components/cropper/cropper.vue')
-      },
-      {
-        path: 'tables_page',
-        name: 'tables_page',
-        meta: {
-          icon: 'md-grid',
-          title: '多功能表格'
-        },
-        component: () => import('@/view/components/tables/tables.vue')
-      },
-      {
-        path: 'split_pane_page',
-        name: 'split_pane_page',
-        meta: {
-          icon: 'md-pause',
-          title: '分割窗口'
-        },
-        component: () => import('@/view/components/split-pane/split-pane.vue')
-      },
-      {
-        path: 'markdown_page',
-        name: 'markdown_page',
-        meta: {
-          icon: 'logo-markdown',
-          title: 'Markdown编辑器'
-        },
-        component: () => import('@/view/components/markdown/markdown.vue')
-      },
-      {
-        path: 'editor_page',
-        name: 'editor_page',
-        meta: {
-          icon: 'ios-create',
-          title: '富文本编辑器'
-        },
-        component: () => import('@/view/components/editor/editor.vue')
-      },
-      {
-        path: 'icons_page',
-        name: 'icons_page',
-        meta: {
-          icon: '_bear',
-          title: '自定义图标'
-        },
-        component: () => import('@/view/components/icons/icons.vue')
-      }
-    ]
-  },
-  {
-    path: '/update',
-    name: 'update',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true,
-      icon: 'md-cloud-upload',
-      title: '数据上传'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'update_table_page',
-        name: 'update_table_page',
-        meta: {
-          icon: 'ios-document',
-          title: '上传Csv'
-        },
-        component: () => import('@/view/update/update-table.vue')
-      },
-      {
-        path: 'update_paste_page',
-        name: 'update_paste_page',
-        meta: {
-          icon: 'md-clipboard',
-          title: '粘贴表格数据'
-        },
-        component: () => import('@/view/update/update-paste.vue')
-      }
-    ]
-  },
-  {
-    path: '/excel',
-    name: 'excel',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true,
-      icon: 'ios-stats',
-      title: 'EXCEL导入导出'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'upload-excel',
-        name: 'upload-excel',
-        meta: {
-          icon: 'md-add',
-          title: '导入EXCEL'
-        },
-        component: () => import('@/view/excel/upload-excel.vue')
-      },
-      {
-        path: 'export-excel',
-        name: 'export-excel',
-        meta: {
-          icon: 'md-download',
-          title: '导出EXCEL'
-        },
-        component: () => import('@/view/excel/export-excel.vue')
-      }
-    ]
-  },
-  {
-    path: '/tools_methods',
-    name: 'tools_methods',
     meta: {
       hideInBread: true,
       hideInMenu: true
     },
-    component: Main,
     children: [
       {
-        path: 'tools_methods_page',
-        name: 'tools_methods_page',
+        path: 'etlCustomEdit_page',
+        name: 'etlCustomEdit_page',
         meta: {
-          icon: 'ios-hammer',
-          title: '工具方法',
-          beforeCloseName: 'before_close_normal'
+          icon: 'md-notifications',
+          title: 'ETL策略编辑'
         },
-        component: () => import('@/view/tools-methods/tools-methods.vue')
-      }
-    ]
-  },
-  {
-    path: '/i18n',
-    name: 'i18n',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'i18n_page',
-        name: 'i18n_page',
-        meta: {
-          icon: 'md-planet',
-          title: 'i18n - {{ i18n_page }}'
-        },
-        component: () => import('@/view/i18n/i18n-page.vue')
-      }
-    ]
-  },
-  {
-    path: '/error_store',
-    name: 'error_store',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'error_store_page',
-        name: 'error_store_page',
-        meta: {
-          icon: 'ios-bug',
-          title: '错误收集'
-        },
-        component: () => import('@/view/error-store/error-store.vue')
-      }
-    ]
-  },
-  {
-    path: '/error_logger',
-    name: 'error_logger',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'error_logger_page',
-        name: 'error_logger_page',
-        meta: {
-          icon: 'ios-bug',
-          title: '错误收集'
-        },
-        component: () => import('@/view/single-page/error-logger.vue')
-      }
-    ]
-  },
-  {
-    path: '/directive',
-    name: 'directive',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'directive_page',
-        name: 'directive_page',
-        meta: {
-          icon: 'ios-navigate',
-          title: '指令'
-        },
-        component: () => import('@/view/directive/directive.vue')
-      }
-    ]
-  },
-  {
-    path: '/multilevel',
-    name: 'multilevel',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true,
-      icon: 'md-menu',
-      title: '多级菜单'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'level_2_1',
-        name: 'level_2_1',
-        meta: {
-          icon: 'md-funnel',
-          title: '二级-1'
-        },
-        component: () => import('@/view/multilevel/level-2-1.vue')
-      },
-      {
-        path: 'level_2_2',
-        name: 'level_2_2',
-        meta: {
-          access: ['super_admin'],
-          icon: 'md-funnel',
-          showAlways: true,
-          title: '二级-2'
-        },
-        component: parentView,
-        children: [
-          {
-            path: 'level_2_2_1',
-            name: 'level_2_2_1',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/multilevel/level-2-2/level-2-2-1.vue')
-          },
-          {
-            path: 'level_2_2_2',
-            name: 'level_2_2_2',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/multilevel/level-2-2/level-2-2-2.vue')
-          }
-        ]
-      },
-      {
-        path: 'level_2_3',
-        name: 'level_2_3',
-        meta: {
-          icon: 'md-funnel',
-          title: '二级-3'
-        },
-        component: () => import('@/view/multilevel/level-2-3.vue')
+        // component: () => import('@/view/ETL-page/etlCustomEdit.vue')
+        component: resolve => require(['@/view/ETL-page/etlCustomEdit.vue'], resolve)
       }
     ]
   },
@@ -563,7 +375,8 @@ export default [
           notCache: true,
           beforeCloseName: 'before_close_normal'
         },
-        component: () => import('@/view/argu-page/params.vue')
+        // component: () => import('@/view/argu-page/params.vue')
+        component: resolve => require(['@/view/argu-page/params.vue'], resolve)
       },
       {
         path: 'query',
@@ -573,7 +386,8 @@ export default [
           title: route => `{{ query }}-${route.query.id}`,
           notCache: true
         },
-        component: () => import('@/view/argu-page/query.vue')
+        // component: () => import('@/view/argu-page/query.vue')
+        component: resolve => require(['@/view/argu-page/query.vue'], resolve)
       }
     ]
   },
@@ -583,7 +397,8 @@ export default [
     meta: {
       hideInMenu: true
     },
-    component: () => import('@/view/error-page/401.vue')
+    // component: () => import('@/view/error-page/401.vue')
+    component: resolve => require(['@/view/error-page/401.vue'], resolve)
   },
   {
     path: '/500',
@@ -591,7 +406,8 @@ export default [
     meta: {
       hideInMenu: true
     },
-    component: () => import('@/view/error-page/500.vue')
+    // component: () => import('@/view/error-page/500.vue')
+    component: resolve => require(['@/view/error-page/500.vue'], resolve)
   },
   {
     path: '*',
@@ -599,6 +415,8 @@ export default [
     meta: {
       hideInMenu: true
     },
-    component: () => import('@/view/error-page/404.vue')
+    // component: () => import('@/view/error-page/404.vue')
+    component: resolve => require(['@/view/error-page/404.vue'], resolve)
   }
+
 ]

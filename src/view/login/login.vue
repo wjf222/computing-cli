@@ -28,11 +28,25 @@ export default {
       'getUserInfo'
     ]),
     handleSubmit ({ userName, password }) {
+      // if (userName === 'superadmin' && password === 'Nr123456') {
+      //   this.$router.push({
+      //     name: this.$config.homeName
+      //   })
+      // }
       this.handleLogin({ userName, password }).then(res => {
         this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
-          })
+          if (password === 'Whvrildcl1#') {
+            this.$router.push({
+              name: this.$config.homeName
+            })
+          } else {
+            this.$Modal.error({
+              title: '失败',
+              content: '账号或者密码错误!'
+            })
+            console.log('密码账号是：' + userName)
+            console.log('密码是：' + password)
+          }
         })
       })
     }

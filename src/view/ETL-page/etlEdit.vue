@@ -58,34 +58,34 @@
     <Card>
       <Icon type="md-analytics" size="32" />
       <Row :gutter="16">
-          <i-col span="4" offset="2">
+          <i-Col span="4" offset="2">
               <div><label>策略名称</label></div>
-          </i-col>
-          <i-col span="6">
+          </i-Col>
+          <i-Col span="6">
               <div>
                   <i-Input v-model="strategyName" placeholder="请输入..." />
               </div>
-          </i-col>
+          </i-Col>
       </Row>
       <br>
       <Row :gutter="16">
-          <i-col span="4" offset="2">
+          <i-Col span="4" offset="2">
               <div><label>请选择抽取数据源</label></div>
-          </i-col>
-          <i-col span="6">
+          </i-Col>
+          <i-Col span="6">
               <div>
                   <i-Select v-model="select_extract_dataSource" @on-change="changeExtractSource">
                       <i-Option v-for="item in extract_dataSource" :value="item.value" :key="item.value">{{ item.label }}</i-Option>
                   </i-Select>
               </div>
-          </i-col>
+          </i-Col>
       </Row>
       <br>
       <Row :gutter="16">
-          <i-col span="4" offset="2">
+          <i-Col span="4" offset="2">
               <div><label>请选择抽取的数据表单</label></div>
-          </i-col>
-          <i-col span="18">
+          </i-Col>
+          <i-Col span="18">
               <div>
                   <Transfer :data="extract_table" :target-keys="select_extract_table"
                             :titles="extractTable_transfer_titles"
@@ -97,33 +97,33 @@
                       </div>
                   </Transfer>
               </div>
-          </i-col>
+          </i-Col>
       </Row>
       <br>
       <Row :gutter="16">
-          <i-col span="4" offset="2">
+          <i-Col span="4" offset="2">
               <div><label>请选择抽取的字段</label></div>
-          </i-col>
-          <i-col span="18">
+          </i-Col>
+          <i-Col span="18">
               <div>
                   <Transfer :data="extract_column" :titles="extractColumn_transfer_titles"
                             :target-keys="selected_extract_column" :list-style="extract_transfer_style"
                             @on-change="extractColumnChange" filterable>
                   </Transfer>
               </div>
-          </i-col>
+          </i-Col>
       </Row>
       <br>
       <Row :gutter="16">
-               <i-col span="4" offset="2">
+               <i-Col span="4" offset="2">
                    <div><label>关联条件：</label></div>
-               </i-col>
-               <i-col span="8">
+               </i-Col>
+               <i-Col span="8">
                    <div>
                      <!--pre标签可以用来识别换行符-->
                        <pre v-text="joinCondition" style="height: 100px; white-space: pre-wrap;word-wrap: break-word;border:solid 1px ;border-color:#C4C4C4;">{{ custom_sql }}</pre>
                    </div>
-               </i-col>
+               </i-Col>
                <i-col span="2" style="top:68px">
                    <i-button @click="openSqlConnectionEditor">编辑SQL</i-button>
                </i-col>
@@ -131,37 +131,37 @@
         </Card>
         <card>
     <Row :gutter="16">
-        <i-col span="4" offset="2">
+        <i-Col span="4" offset="2">
             <div><label>清洗条件：</label></div>
-        </i-col>
-        <i-col span="8">
+        </i-Col>
+        <i-Col span="8">
             <div>
                 <pre v-text="cleanCondition" style="height: 100px; white-space: pre-wrap;word-wrap: break-word;border:solid 1px ;border-color:#C4C4C4;">{{ custom_sql }}</pre>
             </div>
-        </i-col>
+        </i-Col>
         <i-col span="2" style="top:68px">
             <i-button @click="openSqlCleanEditor">编辑SQL</i-button>
         </i-col>
     </Row>
     <br>
     <Row :gutter="16">
-        <i-col span="4" offset="2">
+        <i-Col span="4" offset="2">
             <div><label>转换条件</label></div>
-        </i-col>
-        <i-col span="8">
+        </i-Col>
+        <i-Col span="8">
            <!-- <i-Input v-model="transformCondition" placeholder="选填" />-->
             <Radio-Group v-model="useTransformCondition">
                 <Radio label = "0"><span>不启用</span></Radio>
                 <Radio label = "1"><span>启用</span></Radio>
             </Radio-Group>
-        </i-col>
+        </i-Col>
     </Row>
 
         <Row v-if="useTransformCondition==='1'" :gutter="16">
-            <i-col span="4" offset="2">
+            <i-Col span="4" offset="2">
                     <div><label></label></div>
-            </i-col>
-            <i-col span="16">
+            </i-Col>
+            <i-Col span="16">
                 <card style="height: 250px;overflow: auto">
                     <p slot="title">选择需要转换的字段：</p>
                     <i-button slot="extra" @click="addTransformColumn()" :disabled="isDisabledAdd">添加</i-button>
@@ -191,24 +191,24 @@
                     </row>
                 </card>
 
-            </i-col>
-            <i-col span="10">
+            </i-Col>
+            <i-Col span="10">
 
-            </i-col>
+            </i-Col>
         </Row>
 
 </card>
 <card>
     <br>
     <Row :gutter="16">
-        <i-col span="4" offset="2">
+        <i-Col span="4" offset="2">
             <div><label>数据抽取sql语句</label></div>
-        </i-col>
-        <i-col span="8">
+        </i-Col>
+        <i-Col span="8">
             <div>
                 <pre v-text="form_sql" style="height: 130px; white-space: pre-wrap;word-wrap: break-word;border:solid 1px ;border-color:#C4C4C4; overflow: auto;">{{ form_sql }}</pre>
             </div>
-        </i-col>
+        </i-Col>
         <i-col span="2" style="top:68px">
             <i-button @click="openSqlEditor">测试SQL</i-button>
         </i-col>
@@ -216,16 +216,16 @@
 </card>
 <card>
     <Row :gutter="16">
-        <i-col span="4" offset="2">
+        <i-Col span="4" offset="2">
             <div><label>请选择加载数据源</label></div>
-        </i-col>
-        <i-col span="8">
+        </i-Col>
+        <i-Col span="8">
             <div>
                 <i-Select v-model="select_load_dataSource" @on-change="changeLoadSource" placement="top">
                     <i-Option v-for="item in load_dataSource" :value="item.value" :key="item.value">{{ item.label }}</i-Option>
                 </i-Select>
             </div>
-        </i-col>
+        </i-Col>
     </Row>
     <br>
 
@@ -307,16 +307,16 @@
 </card>
 <br>
    <Row :gutter="16">
-       <i-col span="4" offset="2">
+       <i-Col span="4" offset="2">
            <div><label>请选择所属主题</label></div>
-       </i-col>
-       <i-col span="6">
+       </i-Col>
+       <i-Col span="6">
            <div>
                <i-select v-model="theme_select_model"  placement="top">
                    <i-option v-for="item in themeChooseList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
                </i-select>
            </div>
-       </i-col>
+       </i-Col>
    </Row>
    <Row style="margin-bottom: 100px">
        <i-col offset="18">
@@ -517,12 +517,12 @@
            </Card>
        </row>
        <Row slot="footer" >
-           <i-col span="2" offset="20">
+           <i-Col span="2" offset="20">
                <i-Button @click="cancel">取消</i-Button>
-           </i-col>
-           <i-col span="2">
+           </i-Col>
+           <i-Col span="2">
                <i-Button type="primary" @click="saveConditionSqlEditor">保存</i-Button>
-           </i-col>
+           </i-Col>
        </Row>
    </Modal>
    <Modal v-model="editSqlModal" :title="modal_title" :styles="{top:'30px',width:'800px',height:'250px'}">
@@ -554,15 +554,15 @@
     </div>
 
     <Row slot="footer" >
-        <i-col span="2">
+        <i-Col span="2">
             <i-Button type="success" @click="runSql">测试</i-Button>
-        </i-col>
-        <i-col span="2" offset="18">
+        </i-Col>
+        <i-Col span="2" offset="18">
             <i-Button @click="cancel">取消</i-Button>
-        </i-col>
-        <i-col span="2">
+        </i-Col>
+        <i-Col span="2">
             <i-Button type="primary" @click="saveEditorSql">保存</i-Button>
-        </i-col>
+        </i-Col>
     </Row>
 </Modal>
   </div>
@@ -667,6 +667,7 @@ export default {
       extractDataSourceColumns: [],
       extract_table_sql: '',
       extract_column_sql: '',
+      select_extract_dataSource_type: '',
       select_load_dataSource_type: '',
       // ace编辑器
       // editor_1: null,

@@ -16,20 +16,6 @@ export const getTableData = req => {
   return tableData
 }
 
-export const getOperator = req => {
-  let searchData = []
-  console.log('start')
-  doCustomTimes(20, () => {
-    searchData.push(Mock.mock({
-      name: 'search',
-      email: '@email',
-      createTime: '@date'
-    }))
-  })
-  console.log('end')
-  return searchData
-}
-
 export const getDragList = req => {
   let dragList = []
   doCustomTimes(5, () => {

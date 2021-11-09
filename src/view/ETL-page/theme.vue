@@ -16,54 +16,54 @@
   </Card>
   <Modal v-model="modalA" title="新增主题" @on-ok="saveTheme" @on-cancel="cancel">
     <Row :gutter="16">
-      <i-col span="5" offset="4">
+      <i-Col span="5" offset="4">
         <p style="font-size: 18px">主题名称</p>
-      </i-col>
-      <i-col span="10">
+      </i-Col>
+      <i-Col span="10">
         <i-Input v-model="addThemeName" placeholder="请输入..."></i-Input>
-      </i-col>
+      </i-Col>
     </Row>
     <Row :gutter="16">
 
     </Row>
     <Row :gutter="16">
-      <i-col span="24" offset="1">
+      <i-Col span="24" offset="1">
         <Transfer :data="undistributeStr" :target-keys="targetKeys" :render-format="render1" @on-change="handleChange1"></Transfer>
-      </i-col>
+      </i-Col>
     </Row>
     <Row slot="footer">
-      <i-col span="4" offset="11">
+      <i-Col span="4" offset="11">
         <Button type="primary" @click="saveTheme">保存</Button>
-      </i-col>
-      <i-col span="4">
+      </i-Col>
+      <i-Col span="4">
         <Button @click="cancel">取消</Button>
-      </i-col>
+      </i-Col>
     </Row>
   </Modal>
   <Modal v-model="modalE" title="修改主题" @on-ok="updateTheme" @on-cancel="cancel">
     <Row :gutter="16">
-      <i-col span="5" offset="4">
+      <i-Col span="5" offset="4">
         <p style="font-size: 18px">主题名称</p>
-      </i-col>
-      <i-col span="10">
+      </i-Col>
+      <i-Col span="10">
         <i-Input v-model="editThemeName" placeholder="请输入..."></i-Input>
-      </i-col>
+      </i-Col>
     </Row>
     <Row :gutter="16">
 
     </Row>
     <Row :gutter="16">
-      <i-col span="24" offset="1">
+      <i-Col span="24" offset="1">
         <Transfer :data="allEtlStr" :target-keys="themeTargetKeys" :render-format="render1" @on-change="handleChange2"></Transfer>
-      </i-col>
+      </i-Col>
     </Row>
     <Row slot="footer">
-      <i-col span="4" offset="11">
+      <i-Col span="4" offset="11">
         <Button type="primary" @click="updateTheme">保存</Button>
-      </i-col>
-      <i-col span="4">
+      </i-Col>
+      <i-Col span="4">
         <Button @click="cancel">取消</Button>
-      </i-col>
+      </i-Col>
     </Row>
   </Modal>
 </div>

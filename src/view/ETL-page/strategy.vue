@@ -93,7 +93,7 @@ export default {
         title: '策略类别',
         key: 'etltype',
         render: (h, params) => {
-          if (this.nowData[params.index].etltype === 1) {
+          if (this.nowData[params.index].etltype == 1) {
             return h('span', '标准策略')
           } else {
             return h('span', '自定义抽取策略')
@@ -104,7 +104,7 @@ export default {
         title: '所属主题',
         // 使用render加载数据中的级联数据,这里需要加入判断，如果没有分配主题显示无。
         render: (h, params) => {
-          if (this.nowData[params.index].theme !== undefined && this.nowData[params.index].theme !== '') {
+          if (this.nowData[params.index].theme != undefined && this.nowData[params.index].theme != '') {
             return h('span', this.nowData[params.index].theme.themename)
           } else {
             return h('span', '未分配')
@@ -167,7 +167,7 @@ export default {
     },
     init () {
       const id = this.$route.params.id
-      if (id !== undefined) {
+      if (id != undefined) {
         this.selectTheme(id)
         this.ThisTheme = id
         // this.getETLStrategy();
@@ -190,7 +190,7 @@ export default {
       }).then(function (response) {
         const data1 = response.data
         // alert(data.data['status']);
-        if (data1.status === 0) {
+        if (data1.status == 0) {
           that.themeList = data1.resultList
         } else {
           that.$Modal.error({
@@ -215,7 +215,7 @@ export default {
       }).then(function (response) {
         const data1 = response.data
         // alert(data.data['status']);
-        if (data1.status === 0) {
+        if (data1.status == 0) {
           that.etlCount = data1.dataCount
         } else {
           that.$Modal.error({
@@ -250,7 +250,7 @@ export default {
       // if(this.type_select_model == '0'){
       //     window.parent.root.addpage({name:"数据同步策略",src:'strategy_synchronize'});
       // }
-      if (this.type_select_model === '1') {
+      if (this.type_select_model == '1') {
         this.$router.push({
           name: 'etlEdit_page',
           params: {
@@ -258,7 +258,7 @@ export default {
           }
         })
       }
-      if (this.type_select_model === '2') {
+      if (this.type_select_model == '2') {
         this.$router.push({
           name: 'etlCustomEdit_page',
           params: {
@@ -316,7 +316,7 @@ export default {
     themeDetail (params) {
       // console.log(params.row)
       var etlType = params.row.etltype
-      if (etlType === 1) {
+      if (etlType == 1) {
         this.$router.push({
           name: 'etlEdit_page',
           params: {
@@ -331,7 +331,7 @@ export default {
       //     src: 'strategy_synchronize'
       //   });
       // }
-      if (etlType === 2) {
+      if (etlType == 2) {
         this.$router.push({
           name: 'etlCustomEdit_page',
           params: {
@@ -343,12 +343,12 @@ export default {
     },
     deleteetl () {
       const that = this
-      if (this.selecteEtlId.toString() === '') {
+      if (this.selecteEtlId.toString() == '') {
         that.$Modal.info({
           title: '错误',
           content: '未选择策略'
         })
-      } else if (this.selecteEtlId.toString() !== '') {
+      } else if (this.selecteEtlId.toString() != '') {
         const param = {
           loginname: 'superadmin',
           idsString: this.selecteEtlId.toString()
@@ -363,7 +363,7 @@ export default {
           const data1 = response.data
           // console.log(response.data)
           // alert(data.data['status']);
-          if (data1 === 'success') {
+          if (data1 == 'success') {
             that.addDataSourceModal = false
             that.$Modal.success({
               title: '成功',

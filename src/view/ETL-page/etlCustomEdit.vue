@@ -52,40 +52,40 @@ div.ivu-modal {
     <Card>
       <Icon type="md-analytics" size="32" />
       <Row :gutter="16">
-        <i-col span="4" offset="2">
+        <i-Col span="4" offset="2">
           <div><label>策略名称</label></div>
-        </i-col>
-        <i-col span="6">
+        </i-Col>
+        <i-Col span="6">
           <div>
             <i-Input v-model="strategyName" placeholder="请输入..." />
           </div>
-        </i-col>
+        </i-Col>
       </Row>
       <br>
       <Row :gutter="16">
-        <i-col span="4" offset="2">
+        <i-Col span="4" offset="2">
           <div><label>请选择抽取数据源</label></div>
-        </i-col>
-        <i-col span="6">
+        </i-Col>
+        <i-Col span="6">
           <div id="duplifix4">
             <i-Select v-model="select_extract_dataSource" @on-change="changeExtractSource">
               <i-Option v-for="item in extract_dataSource" :value="item.value" :key="item.value">{{ item.label }}</i-Option>
             </i-Select>
           </div>
-        </i-col>
+        </i-Col>
       </Row>
     </Card>
 
     <card>
       <Row :gutter="16">
-        <i-col span="4" offset="2">
+        <i-Col span="4" offset="2">
           <div><label>自定义数据抽取sql语句</label></div>
-        </i-col>
-        <i-col span="8">
+        </i-Col>
+        <i-Col span="8">
           <div>
             <pre v-text="custom_sql" style="max-height: 200px;min-height: 100px;overflow: auto; white-space: pre-wrap;word-wrap: break-word;border:solid 1px ;border-color:#C4C4C4;">{{ custom_sql }}</pre>
           </div>
-        </i-col>
+        </i-Col>
         <i-col span="2" style="top:20px">
           <i-button @click="openSqlEditor">编辑SQL</i-button>
         </i-col>
@@ -94,16 +94,16 @@ div.ivu-modal {
     </card>
     <card>
       <Row :gutter="16">
-        <i-col span="4" offset="2">
+        <i-Col span="4" offset="2">
           <div><label>请选择加载数据源</label></div>
-        </i-col>
-        <i-col span="8">
+        </i-Col>
+        <i-Col span="8">
           <div id="duplifix3">
             <i-Select v-model="select_load_dataSource" @on-change="changeLoadSource" placement="top">
               <i-Option v-for="item in load_dataSource" :value="item.value" :key="'datasource'+item.value">{{ item.label }}</i-Option>
             </i-Select>
           </div>
-        </i-col>
+        </i-Col>
       </Row>
       <br>
 
@@ -173,16 +173,16 @@ div.ivu-modal {
     </card>
     <br>
     <Row :gutter="16">
-      <i-col span="4" offset="2">
+      <i-Col span="4" offset="2">
         <div><label>请选择所属主题</label></div>
-      </i-col>
-      <i-col span="6">
+      </i-Col>
+      <i-Col span="6">
         <div id="duplifix5">
           <i-select v-model="theme_select_model" placement="top">
             <i-option v-for="item in themeChooseList" :value="item.value" :key="'theme'+item.value">{{ item.label }}</i-option>
           </i-select>
         </div>
-      </i-col>
+      </i-Col>
     </Row>
     <Row style="margin-bottom: 100px">
       <i-col offset="18">
@@ -251,15 +251,15 @@ div.ivu-modal {
     </div>
 
     <Row slot="footer">
-      <i-col span="2">
+      <i-Col span="2">
         <i-Button type="success" @click="runSql">测试</i-Button>
-      </i-col>
-      <i-col span="2" offset="18">
+      </i-Col>
+      <i-Col span="2" offset="18">
         <i-Button @click="cancel">取消</i-Button>
-      </i-col>
-      <i-col span="2">
+      </i-Col>
+      <i-Col span="2">
         <i-Button type="primary" @click="saveEditorSql">保存</i-Button>
-      </i-col>
+      </i-Col>
     </Row>
 
   </Modal>

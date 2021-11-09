@@ -1,7 +1,7 @@
 <template>
   <div>
     <row>
-      <i-col span="12" offset="2">
+      <i-Col span="12" offset="2">
         <Select v-model="thisModel"  style="width:200px" placeholder="选择对应模型分析" @on-select="selectModel">
           <Option v-for="item in mds" :value="item.value" :key="item.id">{{ item.label }}</Option>
         </Select>
@@ -12,12 +12,12 @@
 <!--          <Icon type="ios-search" slot="suffix" />-->
 <!--        </Input>-->
 <!--        <Button style="margin: 10px 10px;" type="primary" @click="searchIp">搜索</Button>-->
-      </i-col>
+      </i-Col>
     </row>
     <row>
-      <i-col span="24">
+      <i-Col span="24">
         <div ref="lineChart" style="height:400px;"></div>
-      </i-col>
+      </i-Col>
     </row>
   </div>
 

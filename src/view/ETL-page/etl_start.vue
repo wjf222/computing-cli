@@ -2,14 +2,14 @@
 <div class="main-div" id="root_div" v-cloak>
   <Card>
     <Row>
-      <i-col span="3">
+      <i-Col span="3">
         <div>
           <i-select v-model="select_model"  placeholder="选择上线状态" @on-select="selectOnline" >
             <i-option v-for="item in chooseList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
           </i-select>
         </div>
-      </i-col>
-      <i-col span="3" style="margin-left: 10px">
+      </i-Col>
+      <i-Col span="3" style="margin-left: 10px">
         <div>
           <div>
             <i-select v-model="theme_select_model" @on-select="selectTheme">
@@ -17,20 +17,20 @@
             </i-select>
           </div>
         </div>
-      </i-col>
-      <i-col span="3" style="margin-left: 10px">
+      </i-Col>
+      <i-Col span="3" style="margin-left: 10px">
         <div>
           <!-- <i-Input v-model="strategyName"/> -->
           <Input placeholder="搜索策略" style="width: auto;" v-model="strategyName" :search=true>
             <Icon type="ios-search" slot="suffix" />
           </Input>
         </div>
-      </i-col>
-      <i-col span="2" style="margin-left: 10px">
+      </i-Col>
+      <i-Col span="2" style="margin-left: 10px">
         <div>
           <i-Button type="primary" icon="ios-search" @click="searchetl">查询</i-Button>
         </div>
-      </i-col>
+      </i-Col>
     </Row>
     <br>
     <tables stripe :loading="loading" ref="tables" v-model="nowData" :columns="columns" />
@@ -39,64 +39,64 @@
   <!--启动执行模态框 -->
   <Modal v-model="startEtlModal" title="启动ETL策略" :mask-closable="false">
     <Row :gutter="16">
-      <i-col span="5" offset="2">
+      <i-Col span="5" offset="2">
         <p style="font-size: 15px">执行策略</p>
-      </i-col>
-      <i-col span="10">
+      </i-Col>
+      <i-Col span="10">
         <i-select v-model="start_style_select_model" @on-change="changeStartStyle">
           <i-option v-for="item in startStyleChooseList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
         </i-select>
 
-      </i-col>
+      </i-Col>
     </Row>
     <br>
     <div id="chooseStartStyle" style="display: block;">
       <Row :gutter="16">
-        <i-col span="5" offset="2">
+        <i-Col span="5" offset="2">
           <p style="font-size: 15px">启动时间</p>
-        </i-col>
-        <i-col span="10">
+        </i-Col>
+        <i-Col span="10">
           <Radio-Group v-model="startTime" @on-change="changeRadio">
             <Radio label="0"><span>立即启动</span></Radio>
             <Radio label="1"><span>设置时间</span></Radio>
           </Radio-Group>
 
-        </i-col>
+        </i-Col>
       </Row>
       <br>
       <div id="chooseTimeBlock" style="display:none">
         <Row :gutter="16">
-          <i-col span="5" offset="2">
+          <i-Col span="5" offset="2">
             <p style="font-size: 15px">选择时间</p>
-          </i-col>
-          <i-col span="10">
+          </i-Col>
+          <i-Col span="10">
             <time-picker v-model="chooseTime" :editable="false" format="yyyy-MM-dd HH:mm" placement="bottom-end" confirm></time-picker>
-          </i-col>
+          </i-Col>
         </Row>
       </div>
       <br>
       <Row :gutter="8">
-        <i-col span="5" offset="2">
+        <i-Col span="5" offset="2">
           <p style="font-size: 15px">执行周期</p>
-        </i-col>
-        <i-col span="3">
+        </i-Col>
+        <i-Col span="3">
           <i-input :min="0" v-model="days"></i-input>
-        </i-col>
-        <i-col span="2">
+        </i-Col>
+        <i-Col span="2">
           <p style="font-size: 15px">天</p>
-        </i-col>
-        <i-col span="3">
+        </i-Col>
+        <i-Col span="3">
           <i-input :min="0" :max="23" v-model="hours"></i-input>
-        </i-col>
-        <i-col span="2">
+        </i-Col>
+        <i-Col span="2">
           <p style="font-size: 15px">时</p>
-        </i-col>
-        <i-col span="3">
+        </i-Col>
+        <i-Col span="3">
           <i-input :min="0" :max="59" v-model="mins"></i-input>
-        </i-col>
-        <i-col span="4">
+        </i-Col>
+        <i-Col span="4">
           <p style="font-size: 15px">分</p>
-        </i-col>
+        </i-Col>
       </Row>
       <br>
     </div>
@@ -109,24 +109,24 @@
   <Modal v-model="showLogsModal" title="执行日志" width="50" :scrollable="true" :styles="{top: '20px'}">
     <div id="showLogDiv">
       <Row v-for="item in nowlogsItemsList">
-        <i-col span="8">
+        <i-Col span="8">
           <p style="font-size: 15px">{{ item.executeTime }}</p>
 
-        </i-col>
-        <i-col span="7">
+        </i-Col>
+        <i-Col span="7">
           <p style="font-size: 15px">{{ item.strategyName }}</p>
-        </i-col>
-        <i-col span="3">
+        </i-Col>
+        <i-Col span="3">
           <div v-if="item.label == '失败'">
             <p style="font-size: 15px;color:#ff0000;">执行{{ item.label }}</p>
           </div>
           <div v-else>
             <p style="font-size: 15px">执行{{ item.label }}</p>
           </div>
-        </i-col>
-        <i-col span="6">
+        </i-Col>
+        <i-Col span="6">
           <i-button type="text" size="small" style="font-size: 15px;color:#56A3F4;" @click="showDetailLog(item)">查看日志详情</i-button>
-        </i-col>
+        </i-Col>
         <br>
         <br>
       </Row>
@@ -140,24 +140,24 @@
   <!--显示日志详情模态框 -->
   <Modal v-model="showDetailLogsModal" title="日志详情" width="50" :scrollable="true" :styles="{top: '20px'}">
     <Row :gutter="16">
-      <i-col span="8">
+      <i-Col span="8">
         <p style="font-size: 15px; font-weight:bold;">{{ currentItem.executeTime }}</p>
-      </i-col>
-      <i-col span="8">
+      </i-Col>
+      <i-Col span="8">
         <p style="font-size: 15px;font-weight:bold;">{{ currentItem.strategyName }}</p>
-      </i-col>
-      <i-col span="4">
+      </i-Col>
+      <i-Col span="4">
         <p style="font-size: 15px;font-weight:bold;">执行{{ currentItem.label }}</p>
-      </i-col>
+      </i-Col>
     </Row>
     <br>
     <Row>
-      <i-col span="24">
+      <i-Col span="24">
         <div>
           <pre style="height: 350px;overflow: auto; white-space: pre-wrap;word-wrap: break-word;">{{ currentItem.log }}</pre>
         </div>
         <!-- <p style="font-size: 12px">{{ currentItem.log }}</p>-->
-      </i-col>
+      </i-Col>
     </Row>
     <div slot="footer">
       <i-button type="primary" size="large" @click="closeDetailLog">关闭</i-button>

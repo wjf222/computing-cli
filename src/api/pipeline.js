@@ -1,4 +1,4 @@
-import axios from '@/libs/api.request'
+import axios from 'axios'
 
 export const getPipelines = (namespace, name) => {
   /**
@@ -17,8 +17,8 @@ export const getPipelines = (namespace, name) => {
    * 参数格式：
    * · URL末尾添加
    */
-  return axios.request({
-    url: '/pipelines',
+  return axios({
+    url: this.GLOBAL.dataUrl + '/pipelines',
     method: 'get',
     withCredentials: true,
     params: {
@@ -39,94 +39,94 @@ export const getPipelineById = (id) => {
    * · 跟随请求路径
    */
   return axios.request({
-    url: '/pipelines/:id',
+    url: dataUrl + '/pipelines/:id',
     method: 'get'
   })
 }
 
-export const addPipeline = () => {
-  /**
-   * 创建 pipeline
-   *
-   * 参数：
-   * {
-   *   //必选参数
-   *   “PipelineName”: 'a',
-   *   'PipelineNamespace': '24344556467532b',
-   *   //可选参数
-   *   'UserName': 'x',
-   *   'PipelineDescription': 'x'
-   * }
-   *
-   * 参数格式：
-   * · json
-   */
+/**
+ * 创建 pipeline
+ * @param params
+ * {
+ *   //必选参数
+ *   “PipelineName”: 'a',
+ *   'PipelineNamespace': '24344556467532b',
+ *   //可选参数
+ *   'UserName': 'x',
+ *   'PipelineDescription': 'x'
+ * }
+ * @returns {AxiosPromise}
+ */
+export const addPipeline = (params) => {
   return axios.request({
-    url: `/pipelines/`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    url: dataUrl + `/pipelines/`,
     method: 'post',
-    params: {
+    data: {
       // 必选参数
-      PipelineName: 'a',
-      PipelineNamespace: '24344556467532b',
+      PipelineName: params.PipelineName,
+      PipelineNamespace: params.PipelineNamespace,
       // 可选参数
-      PipelineDescription: 'x',
-      PipelineGlobalParams: 'k1:v1;k2:v2'
+      PipelineDescription: params.PipelineDescription,
+      PipelineGlobalParams: params.PipelineGlobalParams
     }
   })
 }
 
+/**
+ * 删除指定 id 的 pipeline
+ *
+ * 参数：
+ * · id, string
+ *
+ * 参数格式：
+ * · URL末尾添加
+ */
 export const delPipelineById = (id) => {
-  /**
-   * 删除指定 id 的 pipeline
-   *
-   * 参数：
-   * · id, string
-   *
-   * 参数格式：
-   * · URL末尾添加
-   */
   return axios.request({
-    url: `/pipelines/${id}`,
+    url: dataUrl + `/pipelines/${id}`,
     method: 'delete'
   })
 }
 
+/**
+ * 对 pipeline 执⾏操作
+ *
+ * 参数：
+ * · op, string, 支持 'start' 和 'stop' ，在URL末尾添加
+ *
+ * 参数格式：
+ * · URL末尾添加
+ */
 export const uploadPipelineById = (id) => {
-  /**
-   * 对 pipeline 执⾏操作
-   *
-   * 参数：
-   * · op, string, 支持 'start' 和 'stop' ，在URL末尾添加
-   *
-   * 参数格式：
-   * · URL末尾添加
-   */
   return axios.request({
-    url: `/pipelines/${id}`,
+    url: dataUrl + `/pipelines/${id}`,
     method: 'put'
   })
 }
 
+/**
+ * 修改指定 id 的 pipeline
+ *
+ * 参数：
+ * {
+ *   //必选参数
+ *   “PipelineName”: 'a',
+ *   'PipelineNamespace': '24344556467532b',
+ *   //可选参数
+ *   'UserName': 'x',
+ *   'PipelineDescription': 'x'
+ * }
+ *
+ * 参数格式：
+ * · json
+ * · 跟随请求路径
+ */
 export const modifyPipeline = (id) => {
-  /**
-   * 修改指定 id 的 pipeline
-   *
-   * 参数：
-   * {
-   *   //必选参数
-   *   “PipelineName”: 'a',
-   *   'PipelineNamespace': '24344556467532b',
-   *   //可选参数
-   *   'UserName': 'x',
-   *   'PipelineDescription': 'x'
-   * }
-   *
-   * 参数格式：
-   * · json
-   * · 跟随请求路径
-   */
   return axios.request({
-    url: `/pipelines/${id}`,
+    url: dataUrl + `/pipelines/${id}`,
     method: 'patch'
   })
 }
@@ -143,36 +143,36 @@ export const getItem = (id) => {
    * · 跟随请求路径
    */
   return axios.request({
-    url: `/pipelines/${id}/items`,
+    url: dataUrl + `/pipelines/${id}/items`,
     method: 'get',
     withCredentials: true
   })
 }
 
+/**
+ * 在指定 pipeline 下的创建一组模组
+ *
+ * 参数：
+ * [
+ *   {
+ *      //必选参数
+ *      “Name”: 'x',
+ *      'Namespace': 'xx',
+ *      'ImageId': 1,
+ *      'OperatorId': 1,
+ *      //可选参数
+ *      'ObjectDataId': 1,
+ *      'Params': {}
+ *   }
+ * ]
+ *
+ * 参数格式：
+ * · json
+ * · 跟随请求路径
+ */
 export const addItem = (id) => {
-  /**
-   * 在指定 pipeline 下的创建一组模组
-   *
-   * 参数：
-   * [
-   *   {
-   *      //必选参数
-   *      “Name”: 'x',
-   *      'Namespace': 'xx',
-   *      'ImageId': 1,
-   *      'OperatorId': 1,
-   *      //可选参数
-   *      'ObjectDataId': 1,
-   *      'Params': {}
-   *   }
-   * ]
-   *
-   * 参数格式：
-   * · json
-   * · 跟随请求路径
-   */
   return axios.request({
-    url: `/pipelines/${id}/items`,
+    url: dataUrl + `/pipelines/${id}/items`,
     method: 'post'
   })
 }
@@ -184,7 +184,7 @@ export const addItem = (id) => {
  */
 export const modifyItem = (id) => {
   return axios.request({
-    url: `/pipelines/${id}/items`,
+    url: dataUrl + `/pipelines/${id}/items`,
     method: 'patch'
   })
 }

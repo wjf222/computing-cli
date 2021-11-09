@@ -1,12 +1,16 @@
 <template>
   <div>
     <Card>
-      <tables ref="tables" border searchable inputmode="" search-place="top" v-model="nowData" :columns="columns"
+      <Input placeholder="搜索流水线命名空间" style="width: auto; margin: 10px 10px;" v-model="searchValue.namespace" :search=true></Input>
+      <Input placeholder="搜索流水线命名" style="width: auto; margin: 10px 10px;" v-model="searchValue.name" :search=true></Input>
+      <Button style="margin: 10px 10px;" type="primary" @click="searchPipeline">搜索</Button>
+      <Button style="margin: 10px 10px;" type="success" @click="addPipelineModal">添加流水线</Button>
+      <tables ref="tables" border inputmode="" search-place="top" v-model="nowData" :columns="columns"
               @on-delete="delPipeline"/>
       <Page :total="dataCount" ref="page" :current.sync="pageCurrent" :page-size="pageSize" @on-change="changePage"
             show-elevator/>
     </Card>
-    <Modal width=800 v-model="add" title="修改流水线" @on-ok="savePipeline" @on-cancel="cancel">
+    <Modal width=800 v-model="modalValue.add" title="修改流水线" @on-ok="savePipelineModalData" @on-cancel="cancelPipelineModalData">
       <Row :gutter="16">
         <i-col span="4" offset="2">
           <p style="font-size: 15px">名称</p>
@@ -27,15 +31,6 @@
       <br>
       <Row :gutter="16">
         <i-col span="4" offset="2">
-          <p style="font-size: 15px">用户名</p>
-        </i-col>
-        <i-col span="12">
-          <Input v-model="modalValue.UserName" placeholder="请输入..."></Input>
-        </i-col>
-      </Row>
-      <br>
-      <Row :gutter="16">
-        <i-col span="4" offset="2">
           <p style="font-size: 15px">描述</p>
         </i-col>
         <i-col span="12">
@@ -43,12 +38,21 @@
         </i-col>
       </Row>
       <br>
+      <Row :gutter="16">
+        <i-col span="4" offset="2">
+          <p style="font-size: 15px">参数</p>
+        </i-col>
+        <i-col span="12">
+          <Input v-model="modalValue.PipelineGlobalParams" placeholder="请输入..."></Input>
+        </i-col>
+      </Row>
+      <br>
       <Row slot="footer">
         <i-col span="4" offset="11">
-          <Button type="primary" @click="savePipeline">保存</Button>
+          <Button type="primary" @click="savePipelineModalData">保存</Button>
         </i-col>
         <i-col span="4">
-          <Button @click="cancel">取消</Button>
+          <Button @click="cancelPipelineModalData">取消</Button>
         </i-col>
       </Row>
     </Modal>
@@ -57,13 +61,15 @@
 
 <script>
 import Tables from '_c/tables'
-import { getPipelines } from '@/api/pipeline'
+import axios from 'axios'
 
 export default {
   name: 'pipeline_table_page',
+
   components: {
     Tables
   },
+
   data: function () {
     return {
       // 分页
@@ -72,13 +78,19 @@ export default {
       pageCurrent: 1,
       nowData: [],
 
-      // 多选删除
-      selecteSourcesId: [],
+      // 搜索选项
+      searchValue: {
+        namespace: '',
+        name: ''
+      },
 
-      // 新增数据源modal
-      add: false,
-      editOradd: false,
       modalValue: {
+        // 判断modal是否显示
+        add: false,
+        // 判断是新增页面还是修改页面
+        editOrAdd: '',
+        ID: 0,
+        // 实际使用的参数
         PipelineName: '',
         PipelineNamespace: '',
         PipelineDescription: '',
@@ -110,7 +122,7 @@ export default {
                 },
                 on: {
                   'click': () => {
-                    this.pipelineDetail(params.row.ID)
+                    this.pipelineDetail(params)
                   }
                 }
               }, params.row[params.column.key])
@@ -124,6 +136,10 @@ export default {
         {
           title: '描述',
           key: 'PipelineDescription'
+        },
+        {
+          title: '参数',
+          key: 'PipelineGlobalParams'
         },
         {
           title: '状态',
@@ -162,7 +178,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.remove(params.index)
+                    this.delPipeline(params)
                   }
                 }
               }, '删除')
@@ -173,7 +189,236 @@ export default {
       tableData: []
     }
   },
+
   methods: {
+    /**
+     * 显示添加流水线的表单
+     * @returns {*}
+     */
+    addPipelineModal () {
+      this.modalValue = {
+        add: true,
+        editOrAdd: 'add',
+        PipelineName: '',
+        PipelineNamespace: '',
+        PipelineDescription: '',
+        PipelineGlobalParams: 'k1:v1;k2:v2'
+      }
+    },
+
+    /**
+     * 显示编辑流水线的表单
+     * @param params
+     */
+    editPipelineModal (params) {
+      console.log(params)
+      this.modalValue = {
+        add: true,
+        editOrAdd: 'edit',
+        ID: params.row.ID,
+        PipelineName: params.row.PipelineName,
+        PipelineNamespace: params.row.PipelineNamespace,
+        PipelineDescription: params.row.PipelineDescription,
+        PipelineGlobalParams: params.row.PipelineGlobalParams
+      }
+    },
+
+    /**
+     * 添加流水线
+     */
+    addPipeline () {
+      const that = this
+      const data = {
+        // 必选参数
+        PipelineName: this.modalValue.PipelineName,
+        PipelineNamespace: this.modalValue.PipelineNamespace,
+        // 可选参数
+        PipelineDescription: this.modalValue.PipelineDescription,
+        PipelineGlobalParams: this.modalValue.PipelineGlobalParams
+      }
+      if (this.checkPipelineModalData() === true) {
+        axios({
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          url: this.GLOBAL.dataUrl + `pipelines`,
+          method: 'post',
+          withCredentials: true,
+          data: data
+        }).then(function (response) {
+          console.log(response)
+          // if (data1['status'] === true) {
+          //   that.addPipelineModal = false
+          //   that.$Modal.success({
+          //     title: '成功',
+          //     content: '添加流水线成功！'
+          //   })
+          //   // 重新加载数据源
+          //   that.getETLSourcedata()
+          // } else {
+          //   that.$Modal.error({
+          //     title: '失败',
+          //     content: '服务器端出错，请检查！'
+          //   })
+          // }
+        })
+        this.modalValue.add = false
+      }
+    },
+
+    /**
+     * 修改流水线
+     */
+    editPipeline () {
+      let id = this.modalValue.ID
+      const that = this
+      const data = {
+        // 必选参数
+        PipelineName: this.modalValue.PipelineName,
+        PipelineNamespace: this.modalValue.PipelineNamespace,
+        // 可选参数
+        PipelineDescription: this.modalValue.PipelineDescription,
+        PipelineGlobalParams: this.modalValue.PipelineGlobalParams
+      }
+      if (this.checkPipelineModalData() === true) {
+        axios({
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          url: this.GLOBAL.dataUrl + `pipelines/${id}`,
+          method: 'patch',
+          withCredentials: true,
+          data: data
+        }).then(function (response) {
+          console.log(response)
+          that.loading = false
+          that.freshpage()
+        })
+        this.modalValue.add = false
+      }
+    },
+
+    /**
+     * 检查模态框内数据有效性
+     * @returns {boolean}
+     */
+    checkPipelineModalData () {
+      if (this.modalValue.PipelineName === '') {
+        this.message('请填写流水线名称！')
+        return false
+      }
+      if (this.modalValue.PipelineNamespace === '') {
+        this.message('请填写命名空间！')
+        return false
+      }
+      return true
+    },
+
+    /**
+     * 提交modal页面
+     */
+    savePipelineModalData () {
+      let that = this
+      switch (that.modalValue.editOrAdd) {
+        case 'add': {
+          this.addPipeline()
+          break
+        }
+        case 'edit': {
+          this.editPipeline()
+          break
+        }
+      }
+    },
+
+    cancelPipelineModalData () {
+      this.modalValue.add = false
+    },
+
+    /**
+     * 跳转到模组编辑页面
+     * @param params
+     */
+    pipelineDetail (params) {
+      let id = params.row.ID
+      console.log(id)
+      this.$router.push({
+        name: 'pipeline_edit_page',
+        params: {
+          id: id
+        }
+      })
+    },
+
+    /**
+     * 删除流水线
+     * @param params
+     */
+    delPipeline (params) {
+      let id = params.row.ID
+      let that = this
+      axios.request({
+        url: this.GLOBAL.dataUrl + `pipelines/${id}`,
+        method: 'delete'
+      }).then(function (response) {
+        console.log(response)
+        that.loading = false
+        that.$Modal.success({
+          title: '成功',
+          content: '删除数据源成功！'
+        })
+        that.freshpage()
+      })
+    },
+
+    /**
+     * 对 pipeline 执⾏操作, 支持 "start" 和 "stop"
+     * @param id
+     * @param op
+     * @returns {*}
+     */
+    startOrStop (id, op) {
+      // TODO 创建start和stop按钮
+      console.log(id)
+      console.log(op)
+    },
+
+    /**
+     * 返回符合要求的pipeline列表
+     */
+    searchPipeline () {
+      let namespace = this.searchValue.namespace
+      let name = this.searchValue.name
+      console.log(namespace)
+      console.log(name)
+      this.getPipeline(namespace, name).then(res => {
+        let that = this
+        console.log(res)
+        that.tableData = res.data.data
+        that.dataCount = res.data.data.length
+        that.freshPage()
+      })
+    },
+
+    /**
+     * 返回符合要求的pipeline列表
+     * @param namespace string
+     * @param name string
+     * @returns {AxiosPromise}
+     */
+    getPipeline (namespace, name) {
+      console.log(this.GLOBAL.dataUrl)
+      return axios({
+        url: this.GLOBAL.dataUrl + 'pipelines',
+        method: 'get',
+        withCredentials: true,
+        params: {
+          namespace: namespace,
+          name: name
+        }
+      })
+    },
+
     /**
      * 分页
      */
@@ -183,7 +428,6 @@ export default {
       this.changePage(this.pageCurrent)
       // this.$refs.page.current=1;
     },
-
     /**
      * 点击，切换页面
      * @param index
@@ -200,148 +444,12 @@ export default {
       // 储存当前页
       console.log(this.nowData)
       this.pageCurrent = index
-    },
-
-    /**
-     * 跳转到模组编辑页面
-     * @param id
-     */
-    pipelineDetail (id) {
-      console.log(id)
-      this.$router.push({
-        name: 'pipeline_edit_page',
-        params: {
-          id: id
-        }
-      })
-    },
-
-    getPipelines (namespace, name) {
-      // TODO 后续添加该功能
-      console.log(namespace)
-      console.log(name)
-      /**
-       * 返回符合要求的pipeline列表
-       * 1. user为空 返回空列表；
-       * 2. user不为空且namespace为空返回user对应的所有记录；
-       * 3. user和namespace不为空且name为空，返回user和namespace对应的所有记录；
-       * 4. 都不为空返回精确查找的记录。
-       * 其中user默认值为“default”
-       *
-       * 参数：
-       * · user, string
-       * · namespace, string
-       * · name, string
-       *
-       * 参数格式：
-       * · URL末尾添加
-       */
-      return axios.request({
-        url: '/pipelines',
-        method: 'get'
-      })
-    },
-
-    /**
-     * 返回指定 id 的 pipeline
-     * @param id
-     * @returns {*}
-     */
-    getPipelineById (id) {
-      // TODO 后续添加该功能
-      console.log(id)
-    },
-
-    /**
-     * 显示modal框，并将数据填写在对应位置
-     * @param params
-     */
-    editPipelineModal (params) {
-      console.log(params)
-      this.testResult = -1
-      this.add = true
-      this.editOradd = true
-      this.modalValue.PipelineName = params.row.PipelineName
-      this.modalValue.PipelineNamespace = params.row.PipelineNamespace
-      this.modalValue.UserName = params.row.userName
-      this.modalValue.PipelineDescription = params.row.PipelineDescription
-    },
-
-    savePipeline () {
-      if (this.editOradd) {
-        // 待更新
-        this.modifyPipeline()
-      } else {
-        this.addPipeline()
-      }
-    },
-
-    cancel () {
-      // 关闭modal
-      this.add = false
-    },
-
-    /**
-     * 创建 pipeline
-     * @returns {*}
-     */
-    addPipeline () {
-      // TODO 后续添加该功能
-    },
-
-    /**
-     * 修改指定 id 的 pipeline
-     * @param params
-     * @returns {*}
-     */
-    modifyPipeline (params) {
-      // TODO 后续添加该功能
-      console.log(params)
-    },
-
-    /**
-     * 删除指定 id 的 pipeline
-     * @param id
-     * @returns {*}
-     */
-    delPipeline (id) {
-      // TODO 后续添加该功能
-      console.log(id)
-    },
-
-    /**
-     * 对 pipeline 执⾏操作, 支持 "start" 和 "stop"
-     * @param id
-     * @param op
-     * @returns {*}
-     */
-    startOrStop (id, op) {
-      // TODO 创建start和stop按钮
-      console.log(id)
-      console.log(op)
-    },
-
-    /**
-     * 检查editModal必选项
-     * @returns {boolean}
-     */
-    checkModalData () {
-      if (this.modalValue.PipelineName === '') {
-        this.message('请填写流水线名称！')
-        return false
-      }
-      if (this.modalValue.PipelineNamespace === '') {
-        this.message('请填写命名空间！')
-        return false
-      }
-      return true
     }
   },
 
   mounted () {
-    getPipelines().then(res => {
+    this.getPipeline().then(res => {
       let that = this
-      console.log(res)
       that.tableData = res.data.data
       that.dataCount = res.data.data.length
       that.freshPage()

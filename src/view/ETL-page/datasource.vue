@@ -11,98 +11,98 @@
   </Card>
   <Modal width=800  v-model="add" title="添加数据源" @on-ok="saveDataSource" @on-cancel="cancel">
     <Row :gutter="16">
-      <i-col span="3" offset="2">
+      <i-Col span="3" offset="2">
         <p style="font-size: 15px">数据源名称</p>
-      </i-col>
-      <i-col span="5">
+      </i-Col>
+      <i-Col span="5">
         <i-Input v-model="modalValue.dataSourceName" placeholder="请输入..."></i-Input>
-      </i-col>
-      <i-col span="3" offset="2" >
+      </i-Col>
+      <i-Col span="3" offset="2" >
         <p style="font-size: 15px">数据源类型</p>
-      </i-col>
-      <i-col span="5">
+      </i-Col>
+      <i-Col span="5">
         <i-Select v-model="modalValue.selectedType" @on-change="changeDataType">
           <i-Option v-for="item in modalValue.type" :value="item.value" :key="item.value">{{ item.label }}</i-Option>
         </i-Select>
-      </i-col>
+      </i-Col>
     </Row>
     <br>
     <Row :gutter="16">
-      <i-col span="3" offset="2">
+      <i-Col span="3" offset="2">
         <p style="font-size: 15px">数据源IP</p>
-      </i-col>
-      <i-col span="5">
+      </i-Col>
+      <i-Col span="5">
         <i-Input v-model="modalValue.ip" placeholder="请输入..."></i-Input>
-      </i-col>
-      <i-col span="3" offset="2">
+      </i-Col>
+      <i-Col span="3" offset="2">
         <p style="font-size: 15px">数据源端口</p>
-      </i-col>
-      <i-col span="5">
+      </i-Col>
+      <i-Col span="5">
         <i-Input v-model="modalValue.port" placeholder="请输入..."></i-Input>
-      </i-col>
+      </i-Col>
     </Row>
     <br>
     <Row :gutter="16">
-      <i-col span="3" offset="2">
+      <i-Col span="3" offset="2">
         <p style="font-size: 15px">用户名称</p>
-      </i-col>
-      <i-col span="5">
+      </i-Col>
+      <i-Col span="5">
         <i-Input v-model="modalValue.userName" placeholder="请输入..."></i-Input>
-      </i-col>
-      <i-col span="3" offset="2">
+      </i-Col>
+      <i-Col span="3" offset="2">
         <p style="font-size: 15px">密码</p>
-      </i-col>
-      <i-col span="5">
+      </i-Col>
+      <i-Col span="5">
         <i-Input type="password" v-model="modalValue.password" placeholder="请输入..."></i-Input>
-      </i-col>
+      </i-Col>
     </Row>
     <br>
     <Row :gutter="16">
-      <i-col span="3" offset="2">
+      <i-Col span="3" offset="2">
         <p style="font-size: 15px">数据库名称</p>
-      </i-col>
-      <i-col span="5">
+      </i-Col>
+      <i-Col span="5">
         <i-Input v-model="modalValue.dataBaseName" placeholder="请输入..."></i-Input>
-      </i-col>
-      <i-col span="3" offset="2">
+      </i-Col>
+      <i-Col span="3" offset="2">
         <p style="font-size: 15px">数据源用途</p>
-      </i-col>
-      <i-col span="5">
+      </i-Col>
+      <i-Col span="5">
         <i-Select v-model="modalValue.selectedPurpose" @on-change="changeDataType">
           <i-Option v-for="item in purpose2" :value="item.value" :key="item.value">{{ item.label }}</i-Option>
         </i-Select>
-      </i-col>
+      </i-Col>
     </Row>
     <br>
     <Row :gutter="16">
-      <i-col span="5" offset="4">
+      <i-Col span="5" offset="4">
         <i-Button type="success" @click="testDataSource">
           测试连接
         </i-Button>
-      </i-col>
-      <i-col span="10">
-        <div v-if="testResult === -1">
+      </i-Col>
+      <i-Col span="10">
+        <div v-if="testResult == -1">
           <Alert v-model="testResult" show-icon>测试连接结果</Alert>
         </div>
-        <div v-if="testResult === 2">
+        <div v-if="testResult == 2">
           <Alert v-model="testResult" type="warning" show-icon>连接中，请稍后...</Alert>
         </div>
-        <div v-if="testResult === 1">
+        <div v-if="testResult == 1">
           <Alert v-model="testResult" type="success" show-icon>测试成功</Alert>
         </div>
-        <div v-if="testResult === 0">
+        <div v-if="testResult == 0">
           <Alert v-model="testResult" type="error" show-icon>测试失败，请检查配置信息！</Alert>
         </div>
-      </i-col>
+      </i-Col>
     </Row>
 
     <Row slot="footer">
-      <i-col span="4" offset="11">
+      <i-Col span="4" offset="11">
         <Button type="primary" @click="saveDataSource">保存</Button>
-      </i-col>
-      <i-col span="4">
+      </i-Col>
+      <i-Col span="4">
         <Button @click="cancel">取消</Button>
-      </i-col>
+      </i-Col>
     </Row>
   </Modal>
 </div>
@@ -203,7 +203,7 @@ export default {
         title: '用途',
         // 使用render加载数据中的级联数据,这里需要加入判断，如果没有分配主题显示无。
         render: (h, params) => {
-          if (this.nowData[params.index].extract === 0) {
+          if (this.nowData[params.index].extract == 0) {
             return h('span', '抽取数据源')
           } else {
             return h('span', '加载数据源')
@@ -325,9 +325,8 @@ export default {
             })
           }
         })
-
         this.add = false
-      };
+      }
     },
     editDatasource () {
       const that = this
@@ -356,7 +355,7 @@ export default {
         }).then(function (response) {
           const data1 = response.data
           // alert(data.data['status']);
-          if (data1 === 'success') {
+          if (data1 == 'success') {
             that.addDataSourceModal = false
             that.$Modal.success({
               title: '成功',
@@ -404,7 +403,7 @@ export default {
         }).then(function (response) {
           const data1 = response.data
           // alert(data.data['status']);
-          if (data1['status'] === 1) {
+          if (data1['status'] == 1) {
             that.testResult = 1
           } else {
             that.testResult = 0
@@ -458,12 +457,12 @@ export default {
     // 根据填写的数据源信息拼接url
     getUrl () {
       let url
-      if (this.modalValue.selectedType === 'mysql') {
+      if (this.modalValue.selectedType == 'mysql') {
         url = 'jdbc:' + this.modalValue.selectedType +
           '://' + this.modalValue.ip + ':' +
           this.modalValue.port + '/' + this.modalValue.dataBaseName
       }
-      if (this.modalValue.selectedType === 'oracle') {
+      if (this.modalValue.selectedType == 'oracle') {
         url = 'jdbc:' + this.modalValue.selectedType + ':thin:@' +
           this.modalValue.ip + ':' + this.modalValue.port + ':' +
           this.modalValue.dataBaseName + '#' + this.modalValue.schemeName
@@ -474,12 +473,12 @@ export default {
     },
     deletesource () {
       const that = this
-      if (this.selecteSourcesId.toString() === '') {
+      if (this.selecteSourcesId.toString() == '') {
         that.$Modal.info({
           title: '错误',
           content: '未选择数据源'
         })
-      } else if (this.selecteSourcesId.toString() !== '') {
+      } else if (this.selecteSourcesId.toString() != '') {
         const param = {
           loginname: 'superadmin',
           idsString: this.selecteSourcesId.toString()
@@ -492,7 +491,7 @@ export default {
           params: param
         }).then(function (response) {
           const data1 = response.data
-          if (data1 === 'success') {
+          if (data1 == 'success') {
             that.addDataSourceModal = false
             that.$Modal.success({
               title: '成功',
@@ -522,6 +521,7 @@ export default {
     getETLSourcedata () {
       var that = this
       var transTableData = []
+      console.log(this.GLOBAL.etlUrl)
       axios({
         method: 'post',
         url: this.GLOBAL.etlUrl + 'api/get_etl_datasource_aes',
@@ -556,12 +556,12 @@ export default {
       var type = array[1]
       var ip = ''
       var port = ''
-      if (type === 'mysql') {
+      if (type == 'mysql') {
         ip = array[2].substring(2, 20)
         port = array[3].split('/')[0]
 
         return ip
-      } else if (type === 'oracle') {
+      } else if (type == 'oracle') {
         ip = array[3].substring(1, 20)
         port = array[4]
         return ip
@@ -573,14 +573,14 @@ export default {
       var type = array[1]
       var ip = ''
       var port = ''
-      if (type === 'mysql') {
+      if (type == 'mysql') {
         ip = array[2].substring(2, 20)
         port = array[3].split('/')[0]
         return port
-      } else if (type === 'oracle') {
+      } else if (type == 'oracle') {
         ip = array[3].substring(1, 20)
         port = array[4]
-        console.log(type + '++' + ip + '++' + port)
+        // console.log(type+"++"+ip+"++"+port);
         return port
       }
     },
@@ -588,10 +588,10 @@ export default {
       var array = url.split(':')
       var type = array[1]
       var databaseName = ''
-      if (type === 'mysql') {
+      if (type == 'mysql') {
         databaseName = array[3].split('/')[1]
         return databaseName
-      } else if (type === 'oracle') {
+      } else if (type == 'oracle') {
         return databaseName
       }
     },
