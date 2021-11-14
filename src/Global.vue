@@ -11,9 +11,11 @@
 const etlUrl = URLCONFIG.etlUrl
 const BASE_URL = URLCONFIG.BASE_URL
 const dataUrl = URLCONFIG.dataUrl
+const operatorUrl = URLCONFIG.operatorUrl
 export default{
   BASE_URL,
   etlUrl,
-  dataUrl
+  dataUrl,
+  operatorUrl
 }
 </script>

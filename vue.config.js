@@ -65,6 +65,10 @@ module.exports = {
       '/pipelines': {
         target: 'http://192.168.1.210:32001/computing-meta/v1beta1/',
         changeOrigin: true
+      },
+      '/operators': {
+        target: 'http://192.168.1.210:32001/computing-meta/v1beta1/metadata/operators',
+        changeOrigin: true
       }
     }
   }

@@ -1,83 +1,71 @@
 <template>
   <div>
     <Card>
-      <Input placeholder="搜索算子" style="width: auto; margin: 10px 10px;" v-model="inputOperator" :search=true
-             @on-search="searchOperator">
-        <Icon type="ios-search" slot="suffix"/>
-      </Input>
+      <Input placeholder="命名空间" style="width: auto; margin: 10px 10px;" v-model="searchValue.namespace" :search=true></Input>
+      <Input placeholder="算子" style="width: auto; margin: 10px 10px;" v-model="searchValue.name" :search=true></Input>
       <Button style="margin: 10px 10px;" type="primary" @click="searchOperator">搜索</Button>
-      <Button style="margin: 10px 10px;" type="success" @click="addOperator">添加</Button>
-      <Button style="margin: 10px 10px;" type="error" @click="delOperatorById">删除</Button>
-      <tables stripe :loading="loading" ref="tables" @on-edit="editOperator" v-model="nowData" :columns="columns"
+      <Button style="margin: 10px 10px;" type="success" @click="addOperatorModal">添加</Button>
+      <tables stripe :loading="loading" ref="tables" @on-edit="editOperatorModal" v-model="nowData" :columns="columns"
               @on-selection-change="getOperatorById"/>
       <Page :total="dataCount" ref="page" :current.sync="pageCurrent" :page-size="pageSize" @on-change="changepage" show-elevator />
     </Card>
     <Modal width=800 v-model="add" title="修改算子" @on-ok="saveOperator" @on-cancel="cancel">
       <Row :gutter="16">
         <i-col span="3" offset="2">
-          <p style="font-size: 15px">Name</p>
+          <p style="font-size: 15px">算子名称</p>
         </i-col>
         <i-col span="5">
-          <i-input v-model="modalValue.dataSourceName" placeholder="请输入..."></i-input>
+          <i-input v-model="modalValue.OperatorName" placeholder="请输入..."></i-input>
         </i-col>
         <i-col span="3" offset="2">
-          <p style="font-size: 15px">NameSpace</p>
+          <p style="font-size: 15px">主类</p>
         </i-col>
         <i-col span="5">
-          <i-Select v-model="modalValue.selectedType" @on-change="changeDataType">
-            <i-Option v-for="item in modalValue.type" :value="item.value" :key="item.value">{{ item.label }}</i-Option>
-          </i-Select>
+          <i-input v-model="modalValue.OperatorMainClass" placeholder="请输入..."></i-input>
         </i-col>
       </Row>
       <br>
       <Row :gutter="16">
         <i-col span="3" offset="2">
-          <p style="font-size: 15px">Tag</p>
+          <p style="font-size: 15px">命名空间</p>
         </i-col>
         <i-col span="5">
-          <i-input v-model="modalValue.ip" placeholder="请输入..."></i-input>
+          <i-input v-model="modalValue.OperatorNamespace" placeholder="请输入..."></i-input>
         </i-col>
         <i-col span="3" offset="2">
-          <p style="font-size: 15px">MainClass</p>
+          <p style="font-size: 15px">版本号</p>
         </i-col>
         <i-col span="5">
-          <i-input v-model="modalValue.port" placeholder="请输入..."></i-input>
+          <i-input v-model="modalValue.OperatorTag" placeholder="请输入..."></i-input>
         </i-col>
       </Row>
       <br>
       <Row :gutter="16">
         <i-col span="3" offset="2">
-          <p style="font-size: 15px">RunTimeType</p>
+          <p style="font-size: 15px">运行类型</p>
         </i-col>
         <i-col span="5">
-          <i-input v-model="modalValue.userName" placeholder="请输入..."></i-input>
+          <i-input v-model="modalValue.OperatorRuntimeType" placeholder="请输入..."></i-input>
         </i-col>
         <i-col span="3" offset="2">
-          <p style="font-size: 15px">Description</p>
+          <p style="font-size: 15px">描述</p>
         </i-col>
         <i-col span="5">
-          <i-input type="password" v-model="modalValue.password" placeholder="请输入..."></i-input>
+          <i-input type="password" v-model="modalValue.OperatorDescription" placeholder="请输入..."></i-input>
         </i-col>
       </Row>
       <br>
       <Row :gutter="16">
-        <i-col span="3" offset="2">
-          <p style="font-size: 15px">CreateTime</p>
-        </i-col>
-        <i-col span="5">
-          <Date-picker type="date" placeholder="选择日期" v-model="modalValue.dataBaseName" ></Date-picker>
-        </i-col>
         <i-col span="3" offset="2">
           <p style="font-size: 15px">上传文件</p>
         </i-col>
         <i-col span="5">
-          <Upload action="//jsonplaceholder.typicode.com/posts/">
+          <Upload :action="modalValue.id" >
             <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
           </Upload>
         </i-col>
       </Row>
       <br>
-
       <Row slot="footer">
         <i-col span="4" offset="11">
           <Button type="primary" @click="saveOperator">保存</Button>
@@ -92,8 +80,7 @@
 
 <script>
 import Tables from '_c/tables'
-import { getTableData } from '@/api/data'
-import axios from '@/libs/api.request'
+import axios from 'axios'
 
 export default {
   name: 'tables_page',
@@ -104,14 +91,18 @@ export default {
     return {
       columns: [
         // 必选
-        { title: 'OperatorName', key: 'name', sortable: true },
-        { title: 'OperatorNamespace', key: 'email', editable: true },
-        { title: 'OperatorTag', key: 'email', editable: true },
+        { title: '序号', key: 'ID', sortable: true },
+        { title: '创建时间', key: 'CreatedAt', editable: true },
+        { title: '修改时间', key: 'UpdatedAt', editable: true },
         // 可选
-        { title: 'OperatorMainClass', key: 'email', editable: true },
-        { title: 'OperatorRuntimeType', key: 'email', editable: true },
-        { title: 'OperatorDescription', key: 'email', editable: true },
-        { title: 'Create-Time', key: 'createTime' },
+        { title: '删除时间', key: 'DeletedAt', editable: true },
+        { title: '算子名称', key: 'OperatorName', editable: true },
+        { title: '算子主类', key: 'OperatorMainClass', editable: true },
+        { title: '命名空间', key: 'OperatorNamespace' },
+        { title: '文件路径', key: 'OperatorFilePath' },
+        { title: '标签', key: 'OperatorTag' },
+        { title: '运行类型', key: 'OperatorRuntimeType' },
+        { title: '描述', key: 'OperatorDescription' },
         {
           title: '修改',
           key: 'action',
@@ -130,7 +121,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.editOperator(params)
+                    this.editOperatorModal(params)
                   }
                 }
               }, '修改')
@@ -139,43 +130,28 @@ export default {
           }
         }
       ],
+      searchValue: {
+        namespace: '',
+        name: ''
+      },
       tableData: [],
       nowData: [],
       add: false,
-      pageCurrent: 2,
+      pageCurrent: 1,
       dataCount: 10,
       pageSize: 10,
       editOradd: false,
       inputOperator: '',
       modalValue: {
-        dataSourceName: '',
-        type: [{
-          value: 'mysql',
-          label: 'mysql'
-        }
-          // {
-          //   value: 'oracle',
-          //   label: 'oracle'
-          // }
-        ],
+        id: 0,
+        OperatorName: '',
+        OperatorMainClass: '',
         // 数据源用途
-        purpose: [{
-          value: 0,
-          label: '抽取数据源'
-        }, {
-          value: 1,
-          label: '载入数据源'
-        }
-        ],
-        ip: '',
-        port: '',
-        userName: '',
-        password: '',
-        dataBaseName: '',
-        selectedType: 'mysql',
-        selectedPurpose: 0,
-        // oracle数据库包含模式名
-        schemeName: ''
+        OperatorNamespace: '',
+        OperatorTag: '',
+        OperatorRuntimeType: '',
+        OperatorDescription: '',
+        OperatorFilePath: ''
       },
       purpose2: [{
         value: 0,
@@ -194,21 +170,30 @@ export default {
       console.log(params)
     },
 
-    editOperator (params) {
+    editOperatorModal (params) {
       // modal框读取对应数据
-      console.log(params)
-      this.testResult = -1
       this.add = true
       this.editOradd = true
-      this.modalValue.id = params.row.id
-      this.modalValue.dataSourceName = params.row.name
-      this.modalValue.ip = params.row.ip
-      this.modalValue.port = params.row.port
-      this.modalValue.userName = params.row.username
-      this.modalValue.password = params.row.password
-      this.modalValue.dataBaseName = params.row.dataBaseName
-      this.modalValue.selectedType = params.row.type
-      this.modalValue.selectedPurpose = params.row.extract
+      this.modalValue.OperatorName = params.row.OperatorName
+      this.modalValue.OperatorMainClass = params.row.OperatorMainClass
+      this.modalValue.OperatorNamespace = params.row.OperatorNamespace
+      this.modalValue.OperatorTag = params.row.OperatorTag
+      this.modalValue.OperatorRuntimeType = params.row.OperatorRuntimeType
+      this.modalValue.OperatorDescription = params.row.OperatorDescription
+      this.modalValue.OperatorFilePath = params.row.OperatorFilePath
+      this.modalValue.id = 'http://192.168.1.210:32001/computing-meta/v1beta1/metadata/operators/' + params.row.ID + '?op=upload'
+    },
+    addOperatorModal () {
+      // modal框读取对应数据
+      this.add = true
+      this.editOradd = false
+      this.modalValue.OperatorName = ''
+      this.modalValue.OperatorMainClass = ''
+      this.modalValue.OperatorNamespace = ''
+      this.modalValue.OperatorTag = ''
+      this.modalValue.OperatorRuntimeType = ''
+      this.modalValue.OperatorDescription = ''
+      this.modalValue.OperatorFilePath = ''
     },
 
     saveOperator () {
@@ -216,44 +201,61 @@ export default {
         // 待更新
         this.editDatasource()
       } else {
-        this.addDatasource()
+        this.addOperator()
       }
     },
+    addOperator () {
+      const that = this
+      const data = {
+        // 必选参数
+        OperatorName: this.modalValue.OperatorName,
+        OperatorNamespace: this.modalValue.OperatorNamespace,
+        OperatorMainClass: this.modalValue.OperatorMainClass,
+        OperatorTag: this.modalValue.OperatorTag,
+        // 可选参数
+        OperatorRuntimeType: this.modalValue.OperatorRuntimeType,
+        OperatorDescription: this.modalValue.OperatorDescription
+      }
+      axios({
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        url: this.GLOBAL.operatorUrl + `operators`,
+        method: 'post',
+        withCredentials: true,
+        data: data
+      }).then(res =>
+        console.log(res)
+      )
+      that.freshpage2()
+    },
+
+    // addOperator(){
+    //
+    // }
     // 添加modal
     cancel () {
       this.add = false
     }, // 确定
     changeDataType (value) {
     },
-    getOperators (tag, namespace, name) {
+    getOperators (namespace, name) {
       /**
        * 返回Operators全量数据
        */
-      return axios.request({
-        url: '/operators',
-        method: 'get'
+      console.log('wjf')
+      return axios({
+        // url: this.GLOBAL.operatorUrl + 'operators',
+        url: this.GLOBAL.operatorUrl + 'operators',
+        method: 'get',
+        withCredentials: true,
+        params: {
+          namespace: namespace,
+          name: name
+        }
       })
     },
 
-    searchOperator () {
-      console.log('searchOperator')
-      var that = this
-      var it = this.inputOperator
-      axios.request({
-        url: '/operators',
-        method: 'get',
-        params: {
-          namespace: it
-        }
-      }).then(function (response) {
-        var resdata = response.data
-        that.tableData = resdata
-        that.loading = false
-        that.dataCount = resdata.length
-        // // that.nowData=response.data.datasources.slice(0,10)
-        that.freshpage(that.pageCurrent)
-      })
-    },
     getOperatorById (id) {
       /**
        * 根据id检索指定operator
@@ -261,26 +263,6 @@ export default {
       return axios.request({
         url: '/operators',
         method: 'get'
-      })
-    },
-
-    addOperator () {
-      /**
-       * 创建 operator
-       */
-      return axios.request({
-        url: '/operators/:id',
-        method: 'post'
-      })
-    },
-
-    uploadOperatorById (id, upload_file) {
-      /**
-       * 上传 operator
-       */
-      return axios.request({
-        url: '/operators/:id',
-        method: 'put'
       })
     },
 
@@ -300,9 +282,24 @@ export default {
       this.changepage(this.pageCurrent)
       // this.$refs.page.current=1;
     },
+    freshpage2 () {
+      // 考虑把pageCurrent变为0整页删除bug
+      this.pageCurrent = 1
+      this.changepage(this.pageCurrent)
+      // this.$refs.page.current=1;
+    },
+    searchOperator () {
+      let it = this.searchValue
+      this.getOperators(it.namespace, it.name).then(res => {
+        console.log(res.data.data)
+        let that = this
+        that.tableData = res.data.data
+        that.dataCount = res.data.data.length
+        that.freshpage2()
+      })
+    },
     // 点击，切换页面
     changepage (index) {
-      console.log(this.tableData)
       // console.log(this.pageCurrent)
       // 需要显示开始数据的index,(因为数据是从0开始的，页码是从1开始的，需要-1)
       const _start = (index - 1) * this.pageSize
@@ -311,15 +308,14 @@ export default {
       // 截取需要显示的数据
       this.nowData = this.tableData.slice(_start, _end)
       // 储存当前页
-      console.log(this.nowData)
       this.pageCurrent = index
     }
   },
   mounted () {
-    getTableData().then(res => {
+    this.getOperators().then(res => {
       var that = this
-      that.tableData = res.data
-      that.dataCount = resdata.length
+      that.tableData = res.data.data
+      that.dataCount = res.data.data.length
       that.freshpage()
     })
   }
