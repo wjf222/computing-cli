@@ -25,8 +25,11 @@ import axios from 'axios'
 import global_ from './Global.vue'
 // ace编辑框
 import ace from 'ace-builds'
+import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 Vue.component('tree-table', TreeTable)
 Vue.use(ace)
+Vue.use(Element)
 Vue.prototype.GLOBAL = global_
 axios.defaults.baseURL = global_.BASE_URL
 Vue.prototype.$ajax = axios

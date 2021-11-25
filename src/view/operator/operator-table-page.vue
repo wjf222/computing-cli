@@ -1,13 +1,15 @@
 <template>
   <div>
     <Card>
-      <Input placeholder="命名空间" style="width: auto; margin: 10px 10px;" v-model="searchValue.namespace" :search=true></Input>
+      <Input placeholder="命名空间" style="width: auto; margin: 10px 10px;" v-model="searchValue.namespace"
+             :search=true></Input>
       <Input placeholder="算子" style="width: auto; margin: 10px 10px;" v-model="searchValue.name" :search=true></Input>
       <Button style="margin: 10px 10px;" type="primary" @click="searchOperator">搜索</Button>
       <Button style="margin: 10px 10px;" type="success" @click="addOperatorModal">添加</Button>
       <tables stripe :loading="loading" ref="tables" @on-edit="editOperatorModal" v-model="nowData" :columns="columns"
               @on-selection-change="getOperatorById"/>
-      <Page :total="dataCount" ref="page" :current.sync="pageCurrent" :page-size="pageSize" @on-change="changepage" show-elevator />
+      <Page :total="dataCount" ref="page" :current.sync="pageCurrent" :page-size="pageSize" @on-change="changepage"
+            show-elevator/>
     </Card>
     <Modal width=800 v-model="add" title="修改算子" @on-ok="saveOperator" @on-cancel="cancel">
       <Row :gutter="16">
@@ -51,19 +53,23 @@
           <p style="font-size: 15px">描述</p>
         </i-col>
         <i-col span="5">
-          <i-input type="password" v-model="modalValue.OperatorDescription" placeholder="请输入..."></i-input>
+          <i-input v-model="modalValue.OperatorDescription" placeholder="请输入..."></i-input>
         </i-col>
       </Row>
       <br>
       <Row :gutter="16">
-        <i-col span="3" offset="2">
-          <p style="font-size: 15px">上传文件</p>
-        </i-col>
-        <i-col span="5">
-          <Upload :action="modalValue.id" >
-            <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
-          </Upload>
-        </i-col>
+        <el-upload
+          class="upload-demo"
+          drag
+          action=""
+          multiple
+          show-file-list
+          :http-request="upload"
+        >
+          <i class="el-icon-upload" />
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div slot="tip" class="el-upload__tip">只能上传单个pdf文件，且不超过2M</div>
+        </el-upload>
       </Row>
       <br>
       <Row slot="footer">
@@ -87,22 +93,22 @@ export default {
   components: {
     Tables
   },
-  data () {
+  data() {
     return {
       columns: [
         // 必选
-        { title: '序号', key: 'ID', sortable: true },
-        { title: '创建时间', key: 'CreatedAt', editable: true },
-        { title: '修改时间', key: 'UpdatedAt', editable: true },
+        {title: '序号', key: 'ID', sortable: true},
+        {title: '创建时间', key: 'CreatedAt', editable: true},
+        {title: '修改时间', key: 'UpdatedAt', editable: true},
         // 可选
-        { title: '删除时间', key: 'DeletedAt', editable: true },
-        { title: '算子名称', key: 'OperatorName', editable: true },
-        { title: '算子主类', key: 'OperatorMainClass', editable: true },
-        { title: '命名空间', key: 'OperatorNamespace' },
-        { title: '文件路径', key: 'OperatorFilePath' },
-        { title: '标签', key: 'OperatorTag' },
-        { title: '运行类型', key: 'OperatorRuntimeType' },
-        { title: '描述', key: 'OperatorDescription' },
+        {title: '删除时间', key: 'DeletedAt', editable: true},
+        {title: '算子名称', key: 'OperatorName', editable: true},
+        {title: '算子主类', key: 'OperatorMainClass', editable: true},
+        {title: '命名空间', key: 'OperatorNamespace'},
+        {title: '文件路径', key: 'OperatorFilePath'},
+        {title: '标签', key: 'OperatorTag'},
+        {title: '运行类型', key: 'OperatorRuntimeType'},
+        {title: '描述', key: 'OperatorDescription'},
         {
           title: '修改',
           key: 'action',
@@ -157,20 +163,66 @@ export default {
         value: 0,
         label: '抽取数据源'
       },
-      {
-        value: 1,
-        label: '载入数据源'
-      }
+        {
+          value: 1,
+          label: '载入数据源'
+        }
       ],
-      loading: false
+      loading: false,
+      addArr:[],
+      formInline:{
+        addr:""
+      }
     }
   },
   methods: {
-    handleDelete (params) {
-      console.log(params)
+    getFile(event) {
+      const file = event.target.files;
+      for (let i = 0; i < file.length; i++) {
+        //    上传类型判断
+        const imgName = file[i].name;
+        const idx = imgName.lastIndexOf(".")
+        if (idx != -1) {
+          let ext = imgName.substr(idx + 1).toUpperCase()
+          ext = ext.toLowerCase()
+          this.addArr.push(file[i])
+        }
+      }
+      this.formInline.addr = this.addArr[0]
     },
-
-    editOperatorModal (params) {
+    upload(param) {
+      const that = this
+      const formData = new FormData()
+      formData.append('upload', param.file)
+      axios({
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        url: this.modalValue.id,
+        method: 'post',
+        withCredentials: true,
+        data: formData
+      })
+    },
+    handleSubmit(name){
+      if(0 != this.addArr.length) {
+        this.$refs[name].$ajax({
+          // url: this.GLOBAL.operatorUrl + 'operators',
+          url: this.modalValue.id,
+          method: 'post',
+          withCredentials: true,
+          files:[
+            ('upload', ('holder.jar',
+              open(this.addArr[0], 'rb'),
+              'application/java-archive'))
+          ],
+          headers:{
+            "Content-Type":"multipart/form-data"
+          }
+        })
+      }
+    },
+    editOperatorModal(params) {
       // modal框读取对应数据
       this.add = true
       this.editOradd = true
@@ -183,7 +235,7 @@ export default {
       this.modalValue.OperatorFilePath = params.row.OperatorFilePath
       this.modalValue.id = 'http://192.168.1.210:32001/computing-meta/v1beta1/metadata/operators/' + params.row.ID + '?op=upload'
     },
-    addOperatorModal () {
+    addOperatorModal() {
       // modal框读取对应数据
       this.add = true
       this.editOradd = false
@@ -196,15 +248,30 @@ export default {
       this.modalValue.OperatorFilePath = ''
     },
 
-    saveOperator () {
+    saveOperator() {
       if (this.editOradd) {
         // 待更新
-        this.editDatasource()
+        // this.editDatasource()
+        // console.log(0)
+        // if(0 != this.addArr.length) {
+        //   axios({
+        //     // url: this.GLOBAL.operatorUrl + 'operators',
+        //     url: this.modalValue.id,
+        //     method: 'post',
+        //     withCredentials: true,
+        //     files:[
+        //       ('upload', ('holder.jar',
+        //         open(this.addArr[0], 'rb'),
+        //         'application/java-archive'))
+        //     ],
+        //   })
+        // }
       } else {
         this.addOperator()
       }
+
     },
-    addOperator () {
+    addOperator() {
       const that = this
       const data = {
         // 必选参数
@@ -234,16 +301,13 @@ export default {
     //
     // }
     // 添加modal
-    cancel () {
+    cancel() {
       this.add = false
     }, // 确定
-    changeDataType (value) {
-    },
-    getOperators (namespace, name) {
+    getOperators(namespace, name) {
       /**
        * 返回Operators全量数据
        */
-      console.log('wjf')
       return axios({
         // url: this.GLOBAL.operatorUrl + 'operators',
         url: this.GLOBAL.operatorUrl + 'operators',
@@ -256,7 +320,7 @@ export default {
       })
     },
 
-    getOperatorById (id) {
+    getOperatorById(id) {
       /**
        * 根据id检索指定operator
        */
@@ -266,29 +330,20 @@ export default {
       })
     },
 
-    delOperatorById (id) {
-      /**
-       * 删除指定的 operator
-       */
-      return axios.request({
-        url: '/operators/:id',
-        method: 'delete'
-      })
-    },
     // 当有数据更新刷新页面
-    freshpage () {
+    freshpage() {
       // 考虑把pageCurrent变为0整页删除bug
       this.pageCurrent = 1
       this.changepage(this.pageCurrent)
       // this.$refs.page.current=1;
     },
-    freshpage2 () {
+    freshpage2() {
       // 考虑把pageCurrent变为0整页删除bug
       this.pageCurrent = 1
       this.changepage(this.pageCurrent)
       // this.$refs.page.current=1;
     },
-    searchOperator () {
+    searchOperator() {
       let it = this.searchValue
       this.getOperators(it.namespace, it.name).then(res => {
         console.log(res.data.data)
@@ -299,7 +354,7 @@ export default {
       })
     },
     // 点击，切换页面
-    changepage (index) {
+    changepage(index) {
       // console.log(this.pageCurrent)
       // 需要显示开始数据的index,(因为数据是从0开始的，页码是从1开始的，需要-1)
       const _start = (index - 1) * this.pageSize
@@ -311,7 +366,7 @@ export default {
       this.pageCurrent = index
     }
   },
-  mounted () {
+  mounted() {
     this.getOperators().then(res => {
       var that = this
       that.tableData = res.data.data
